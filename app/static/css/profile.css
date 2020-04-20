@@ -1,0 +1,137 @@
+#profile-wrapper{
+    background-color:rgba(0, 0, 0, 0.411);
+    width:720px;
+    height:340px;
+    position:absolute;
+    z-index:100;
+    top:100;
+    left:220px;
+    border-radius:5px;
+    padding:20px;
+}
+
+#mid{
+    margin-top:30px;
+    border-top:1px solid rgba(255, 255, 255, 0.644);
+}
+
+
+#username-header{
+    font-size:17px;
+    margin:0px;
+    color:rgba(255, 255, 255, 0.815);
+    float:left;
+    font-weight:normal;
+}
+
+#return-button{
+    color:rgba(0, 0, 0, 0.329);
+    font-size:25px;
+}
+
+#return-button:hover{
+    color:black;
+    cursor:pointer;
+}
+
+#user-movies-table-area{
+    width:100%;
+    height:90%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}
+
+#user-movies-table-area span{
+    color:white;
+    font-size:14px;
+}
+
+/*Movies Table*/
+.left{
+    float:left;
+    height:100%;
+    border-right:1px solid rgba(255, 255, 255, 0.644);
+    padding-right:10px;
+}
+
+#user-movies-table {
+    color:white;
+    font-size:13px;
+    text-align:left;
+    border-spacing: 0px;
+    border-collapse: separate;
+    padding-top:5px;
+}
+
+/*movie name column*/
+#user-movies-table th:nth-child(2){
+    width:250px;
+}
+
+/*date column*/
+#user-movies-table th:nth-child(3){
+    width:100px;
+}
+
+#user-movies-table td{
+    color:rgba(255, 255, 255, 0.637);
+    vertical-align: top;
+    
+}
+
+#user-movies-table tr:hover{
+    cursor:pointer;
+    background-color:rgba(0, 0, 0, 0.15);
+}
+
+.movie-poster{
+    height:auto;
+    width:60px;
+}
+
+.selected-movie{
+    background-color:rgba(0, 0, 0, 0.301);
+}
+
+#user-movies-table .selected-movie:hover{
+    background-color:rgba(0, 0, 0, 0.301);
+}
+
+/*Votes table*/
+.right{
+}
+
+#user-votes-table {
+    color:white;
+    font-size:13px;
+    text-align:left;
+    border-spacing: 0px;
+    border-collapse: separate;
+    padding-left:10px;
+    padding-top:5px;
+}
+
+/*movie name column*/
+#user-votes-table th:nth-child(2){
+    width:250px;
+}
+
+/*date column*/
+#user-votes-table th:nth-child(3){
+    width:100px;
+}
+
+#user-votes-table td{
+    color:rgba(255, 255, 255, 0.637);
+    vertical-align: top;
+    
+}
+
+#user-votes-table tr:hover{
+    cursor:pointer;
+    background-color:rgba(0, 0, 0, 0.15);
+}
+
+#user-votes-table .selected-movie:hover{
+    background-color:rgba(0, 0, 0, 0.301);
+}

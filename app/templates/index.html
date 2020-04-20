@@ -1,0 +1,501 @@
+<html>
+    <head>
+        <title>Movienite Votehub</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"> 
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
+        <!--<script src="{{url_for('static', filename='node_modules/sortable/src/jquery-ui-1.10.1.custom.js')}}"></script>-->
+        <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
+        <script type="text/javascript" src="{{url_for('static', filename='js/profile.js')}}"></script>
+        <script>
+            $(document).ready(function(){ 
+                $('#user-profile').hide();
+                $("#home-button-menu-results").hide();
+                $('#movie-vote-area').hide();
+                $('#search-results').hide();
+                $('#movie-history-table').hide()
+                //toggles between the top-left menu button results being open and closed
+                $("#home-button").click(function() {
+                    $("#home-button-menu-results").toggle("fast");
+                });
+
+                //search movie logic
+                $('#addmovie-field').on('input',function(){
+                      if( $(this).val().trim().length > 0 ){
+                          $('#addmovie-field').css('border-radius','5px 5px 0px 0px');
+                          $('#addmovie-field').css('border-bottom', '1px solid rgba(0, 0, 0, 0.781)');
+                          $('#search-results').slideDown("slow");
+                          searchQuery();
+                      }else{
+                          $('#search-results').slideUp("fast");
+                          $('#addmovie-field').css('border-radius','5px 5px 5px 5px');
+                          $('#addmovie-field').css('border-bottom', 'none');
+                      }
+                });
+
+                
+                $("#search-results").on("click", '.search-result', function(event){
+                    selected_movie = $(this).find("span").text();
+                    movie_row = $('.selected-movie')
+                    console.log("Selected movie: "+selected_movie);
+                    $('#search-results').slideUp("fast");
+                    $('#addmovie-field').css('border-radius','5px 5px 5px 5px');
+                    $('#addmovie-field').css('border-bottom', 'none')
+                    $('#addmovie-field').val(selected_movie);
+                    getinfo(selected_movie, movie_row, refresh=false);
+                });
+
+                $("#addmovie-button").on("click", function(event){
+                    addmovie();
+                });
+
+                $('#refresh-movie').on("click", function(event){
+                    selected_movie = $('.selected-movie').find('td:nth-child(2)').text()
+                    movie_row = $('.selected-movie')
+                    console.log("Refreshing movie "+selected_movie)
+                    getinfo(selected_movie, movie_row, refresh=true);
+                });
+
+                $('#wrapper').on("click", 'tr', function(event){
+                    if( ($(this).attr('id') == 'table-header') || event.target.className.includes('fa') || $(event.target).hasClass('vote-row') ){
+                        //ignore if header
+                    }else{
+                        movie_row = $(this)
+                        selectmovie(movie_row)
+                    }
+                });
+
+                /*$('#movie-lw-table').on("click", 'tr', function(event){
+                    if( ($(this).attr('id') == 'table-lw-header') || event.target.className.includes('fa') || $(event.target).hasClass('vote-row') ){
+                        //ignore if header
+                    }else{
+                        movie_row = $(this)
+                        selectmovie(movie_row)
+                    }
+                });*/
+
+                //open user profile pages
+                $('#movie-que-area').on("click", '#user-profile-button', function(event){
+                    username = $(this).text();
+                    $('#main').addClass('blurelement');
+                    $('#archive-button').addClass('blurelement');
+                    $.post( '/profile', { 'username':username } ).done(function(response) {
+                        $('#user-profile').html(response)
+                        $('#user-profile').fadeIn();
+                    });
+                });
+
+                $('html').click(function(e) {
+                //if clicked element is not your element and parents aren't your div
+                if ( e.target.id != 'user-profile' && $(e.target).parents('#user-profile').length == 0 && e.target.id != 'user-profile-button')  {
+                    $('#user-profile').fadeOut( function(){
+                        $('#user-profile').html('')
+                        $('#main').removeClass('blurelement');
+                    });
+
+                }
+                });
+
+
+                $('#movie-lw-table').on("click", '.delete_button', function(event){
+                    movie_row = $(this).closest('tr')
+                    movie_name = $(this).closest('tr').attr('id')
+                    username = '{{ current_user.username }}'
+                    deletemovie(movie_row, movie_name, username);
+                    selectmovie($('#movie-que-table tr:nth-child(2)'));
+                });
+
+                function deletemovie(movie_row, movie_name, username){
+                    $.post( '/deletemovie', { "movie_name":movie_name,"username":username } ).done(function(response) {
+                        movie_row.fadeOut();
+                        movie_row.remove()
+                    }).fail(function() {
+                        console.log('Failed removing the movie: '+response['responseText'])
+                    });
+                }
+
+                var active = false;
+                //vote button click events
+                $('#movie-que-table').on("click", '.fa', function(event){
+                    if (active) {
+                        return;
+                    }
+                    active = true;
+                    vote_class = $(this).attr('class')
+                    movie_name = $(this).closest('tr').attr('id')
+                    movie_row = $(this).closest('tr')
+                    movie_votes = $(this).closest('td')
+                    $.post( '/getpoints', { "username":'{{ current_user.username }}' } ).done(function(response) {
+                        user_points = response['points']
+                        //upvoting
+                        if (vote_class.includes('plus') ){
+                            vote_point = 'plus'
+                            //fade in the downvote button
+                            if( !document.getElementById('vote-button-minus') && user_points != 0 ){
+                                minus_button = `<i id="vote-button-minus" class="fa fa-minus-square"></i>`
+                                $(minus_button).hide().appendTo(movie_votes).fadeIn();
+                                //active = false;
+                            }
+                        //downvoting
+                        }else{
+                            vote_point = 'minus'
+                            //fade out the downvote button
+                            $('#vote-button-minus').fadeOut('fast', function(){
+                                $(this).remove();
+                               // active = false;
+                            });
+                        }
+                        active = false;
+                        vote(movie_name, vote_point, movie_votes, vote_class, movie_row);
+                        
+                        
+                    });
+                });
+
+                $('#movie-lw-table').on("click", '.fa', function(event){
+                    if (active) {
+                        return;
+                    }
+                    active = true;
+                    movie_name = $(this).closest('tr').attr('id')
+                    movie_row = $(this).closest('tr')
+                    $.post( '/getpoints', { "username":'{{ current_user.username }}' } ).done(function(response) {
+                        points = response['points']
+                        username = '{{ current_user.username }}'
+                        if (points != 0){
+                            cuemovie(movie_name, movie_row, username);
+                        }
+                        active = false;
+                    });
+                });
+
+                $('#movie-que-table').on("click", '.selected-movie', function(event){
+                    if( event.target.className.includes('fa') || $(event.target).hasClass('vote-row') ){
+                        //ignore if header
+                    }else{
+                        $('.vote-row').remove();
+                        $('.selected-movie').removeClass('selected-movie');
+                    }
+
+                });
+
+                $('#movie-lw-table').on("click", '.selected-movie', function(event){
+                    if( event.target.className.includes('fa') || $(event.target).hasClass('vote-row') ){
+                        //ignore if header
+                    }else{
+                        $('.vote-row').remove();
+                        $('.selected-movie').removeClass('selected-movie');
+                    }
+                });
+
+                function cuemovie(movie_name, movie_row, username){
+                    $.post( '/cuemovie', { "movie_name":movie_name, "username":username } ).done(function(response) {
+                        movie_row.fadeOut();
+                        points = response['points']
+                        que_movie_row =
+                            `<tr class="selected-movie" id="${movie_name}">
+                                    <td></td>
+                                    <td>${movie_name}</td>
+                                    <td id="user-profile-button">${response['username']}</td>
+                                    <td><span>0</span><i id="vote-button-plus" class="fa fa-plus-square"></i></td>
+                                    <td></td>
+                             </tr>`
+                        $('.selected-movie').removeClass('selected-movie');
+                        $(que_movie_row).hide().appendTo('#movie-que-table').fadeIn();
+                        if (points == 1){
+                            console.log('Updating points to: '+points)
+                            $('#your-points-field').find('span').text(`${points} point 🎬`);
+                        }else{
+                            $('#your-points-field').find('span').text(`${points} points 🎬`);
+                        }
+                        console.log('Added movie to the cue')
+                    });
+                }
+
+                function vote(movie_name, vote_point, movie_votes){
+                    current_user = '{{ current_user.username }}'
+                    $.post( '/vote', { "movie_name": movie_name, "vote_point":vote_point, "current_user":current_user } ).done(function(response) {
+                        points = response['points']
+                        votes = response['votes']
+                        if (points == 1){
+                            $('#your-points-field').find('span').text(`${points} point 🎬`)
+                        }else{
+                            $('#your-points-field').find('span').text(`${points} points 🎬`)
+                        }
+                        movie_votes.find('span').text(`${votes}`);
+                        sortmovies();
+                        getvotes(movie_name,movie_row);
+                    }).fail(function() {
+                        //
+                    });
+                }
+
+                function addmovie(){
+                    $('.vote-row').remove();
+                    selected_movie = $('#addmovie-field').val().trim()
+                    movie_poster = $('#movie-poster').css('background-image').split(/"/)[1]
+                    movie_year = $('#movie-year').text();
+                    movie_plot = $('#movie-plot').text();
+                    movie_rating = $('#movie-rating').text();
+                    movie_genres = $('#movie-genres').text();
+                    movie_director = $('#movie-director').text();
+                    movie_imdbpage = $('#movie-imdbpage').text();
+                    if(selected_movie.length == 0){
+                        console.log('Trying to submit an empty string')
+                    }else{
+                        current_user = '{{ current_user.username }}'
+                        console.log('Requesting to add movie: '+selected_movie)
+                        $.post( '/addmovie', { "selected_movie": selected_movie, 
+                                                "current_user":current_user, 
+                                                "movie_poster":movie_poster,
+                                                "movie_year":movie_year,
+                                                "movie_rating":movie_rating,
+                                                "movie_genres":movie_genres,
+                                                "movie_plot":movie_plot,
+                                                "movie_director":movie_director,
+                                                "movie_imdbpage":movie_imdbpage
+                                                }).done(function(response) {
+                            /*points = response['points']
+                            if (points == 1){
+                                $('#your-points-field').find('span').text(`${points} point 🎬`)
+                            }else{
+                                $('#your-points-field').find('span').text(`${points} points 🎬`)
+                            }*/
+                            movie_row =
+                            `<tr class="selected-movie" id="${selected_movie}">
+                                    <td><i class="delete_button fa fa-trash"></i></td>
+                                    <td>${selected_movie}</td>
+                                    <td id="user-profile-button">${current_user}</td>
+                                    <td><i id="cue-button-plus" class="fa fa-arrow-circle-right"></i></td>
+                                    <td></td>
+                             </tr>`
+                            $('.selected-movie').removeClass('selected-movie');
+                            $(movie_row).hide().appendTo('#movie-lw-table').fadeIn();
+                            //$('#movie-que-table').fadeIn('fast')
+                            console.log("Added movie to backlog sucessfuly")
+                        }).fail(function(response) {
+                            console.log("Failed adding the movie: "+response['responseText']);
+                            if (response['responseText'] == 'Movie already exists'){
+                                selectmovie($(`#${selected_movie}`))
+                            }
+                        });
+                    }
+                }
+
+                //<i id="vote-button-minus" class="fa fa-minus-square"></i>
+
+                function selectmovie(movie_row){
+                    $('.delete_button').hide();
+                    console.log(`Selecting movie ${$(movie_row).attr('id')}`);
+                    $('.selected-movie').removeClass('selected-movie');
+                    $(movie_row).addClass('selected-movie');
+                    getinfo($(movie_row).attr('id'),$(movie_row),refresh=false);
+                    $(movie_row).find('td:first-child').find('.delete_button').fadeIn()
+                }
+
+                function showminusvote(){
+                    $('#movie-que-table > tbody  > tr').each(function(index, tr) { 
+                        if(tr.id == '{{ last_vote }}'){
+                            $(tr).find('td:nth-child(4)').append(`<i id="vote-button-minus" class="fa fa-minus-square"></i>`)
+                        }
+                    });
+                }
+
+                function showdeletebutton(){
+                    $('#movie-lw-table > tbody  > tr').each(function(index, tr) {
+                        if($(tr).find('td:nth-child(3)').text() == '{{ current_user.username }}'){
+                            $(tr).find('td:first-child').append(`<i class="delete_button fa fa-trash"></i>`);
+                        }
+                    });
+                    $('.delete_button').hide();
+                }
+
+
+                showminusvote(); //shows what you can downvote
+                showdeletebutton(); //shows what you can remove from the backlog table
+                sortmovies();
+                //do a check to make sure there is movies in the list
+                if($('#movie-que-table tr').length-1 > 0){
+                    selectmovie($('#movie-que-table tr:nth-child(2)'));
+                }else{
+                    $('#poster-loading-icon').hide();
+                }
+
+                //PROFILE LOGIC
+                $('#return-button').on('click', function(){
+                    window.location.href = '/login'
+                });
+
+                /*$('#user-movies-table').on("click", 'tr', function(event){
+                    if( ($(this).attr('id') == 'table-header') ){
+                        //ignore if header
+                    }else{
+                        movie_row = $(this)
+                        selectmovie(movie_row)
+                    }
+                });*/
+
+                if($('#user-movies-table tr').length-1 > 0){
+                    selectmovie($('#user-movies-table tr:nth-child(2)'));
+                }
+
+
+                $('#archive-button').on('click', function(){
+                    if (!$(this).hasClass('archive-table-open')){
+                        $('#movie-history-table').fadeIn('fast');
+                        console.log('Opening Archive tab');
+                        //$('#movie-history-table-wrapper').css('right', '-405px');
+                        //$('#movie-history-table-wrapper').css('width', '290px');
+                        $('#movie-history-table-wrapper').animate({ right:'-405px'},{duration:335,queue: false});
+                        $('#movie-history-table-wrapper').animate({ 'width':'290px'},{duration:335,queue: false});
+                        $("#archive-button").animate({ right:'-435px'},{duration:335,queue: false});
+                        //$('#movie-history-table-wrapper').css('overflow','scroll');
+                        //$('#movie-history-table-wrapper::-webkit-scrollbar').css('width','0px');
+                        //$('#movie-history-table-wrapper::-webkit-scrollbar').css('background','transparent');
+                        //$('#movie-history-table').show("slide", { direction: "right" }, 400);
+                        $('#movie-history-table').css('width', '290px');
+                        $('#movie-history-table').css('color','rgba(255, 255, 255, 1)');
+                        $('#archive-button-element').css('transform', 'rotate(90deg)');
+                        
+                        $(this).addClass('archive-table-open');
+                    }else{
+                        console.log('Closing Archive tab');
+                        //$('#movie-history-table-wrapper').css('right', '-115px');
+                        //$('#movie-history-table-wrapper').css('width', '0px');
+                        $('#movie-history-table-wrapper').animate({ right:'-115px'},{duration:335,queue: false});
+                        $('#movie-history-table-wrapper').animate({ 'width':'0px'},{duration:335,queue: false});
+                        $("#archive-button").animate({ right:'-145px'},{duration:335,queue: false});
+                        $('#movie-history-table').css('width', '0px');
+                        $('#movie-history-table').css('color','rgba(255, 255, 255, 0)');
+                        $('#archive-button-element').css('transform', 'rotate(360deg)')
+                        $(this).removeClass('archive-table-open');
+                        $('#movie-history-table').fadeOut('fast');
+                    }
+
+                });
+
+            });
+
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="main">
+                <!--Top part of the UI-->
+                <div id="user-area-top">
+                    <button id="home-button"><i class="fa fa-bars"></i></button>
+                    <div id="your-points-field">
+                        {% if points == 1 %}
+                            <span id="points">{{ points }} point 🎬</span>
+                        {% else %}
+                            <span id="points">{{ points }} points 🎬</span>
+                        {% endif %}
+                    </div>
+                    <div id="home-button-menu-results">
+                        <a href="">My Profile</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                    <span id="welcome-message">Welcome, {{ current_user.username }}.</span>
+                    <span id="next-date">Points reset on {{ date }}</span>
+                </div>
+                <!-- Middle part of the UI-->
+                <div id="user-area-mid">
+                    <div id="movie-add-area">
+                        <input type="field" id="addmovie-field" name="addmovie-field"/>
+                        <div id="search-results">
+                            <!-- Search Results render here from search.html-->
+                        </div>
+                        <!--<input type="submit" value="Add Movie" id="addmovie-button" name="addmovie-button"/>-->
+                        <i id="addmovie-button" class="fa fa-plus-square"></i>
+                    </div>
+                    <div id="movie-poster">
+                        <center>
+                            <div id="poster-loading-icon" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        </center>
+                    </div>
+                    <div id="movie-que-area">
+                        <div id="movie-info">
+                            <span class="movie-property">IMDB Page: </span><span id="movie-imdbpage"></span><br>
+                            <span class="movie-property">Year: </span><span id="movie-year"></span><br>
+                            <span class="movie-property">Rating: </span><span id="movie-rating"></span><br>
+                            <span class="movie-property">Genres: </span><span id="movie-genres"></span><br>
+                            <span class="movie-property">Directors: </span><span id="movie-director"></span><br>
+                            <span class="movie-property">Plot: </span><span id="movie-plot"></span>
+
+                            <i id="refresh-movie" class="fa fa-sync-alt"></i>
+                        </div>
+                        <div id="movie-que-table-wrapper">
+                            <table id="movie-que-table">
+                                <tr id="table-header">
+                                    <th></th>
+                                    <th>Movies this week</th>
+                                    <th>Username</th>
+                                    <th>Votes</th>
+                                    <th></th>
+                                </tr>
+                                {%for object in instance %}
+                                <tr id="{{ object.movie }}">
+                                    <td></td>
+                                    <td>{{ object.movie }}</td>
+                                    <td id="user-profile-button">{{ object.username }}</td>
+                                    <td><span>{{ object.votes }}</span><i id="vote-button-plus" class="fa fa-plus-square"></i></td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                            <!-- table separator -->
+                            <div id="table-separator"></div>
+                            <!-- table separator -->
+                            <table id="movie-lw-table">
+                                <tr id="table-header">
+                                    <th></th>
+                                    <th>Backlog movies</th>
+                                    <th>Username</th>
+                                    <th>Cue Up</th>
+                                    <th></th>
+                                </tr>
+                                {%for object in instance_old %}
+                                <tr id="{{ object.movie }}">
+                                    <td></td>
+                                    <td>{{ object.movie }}</td>
+                                    <td id="user-profile-button">{{ object.username }}</td>
+                                    <td><i id="cue-button-plus" class="fa fa-arrow-circle-right"></i></td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <p style="float:right;color:rgba(255, 255, 255, 0.65);font-size:10px;">v1.0</p>
+            </div>
+            <div id="user-profile">
+
+            </div>
+            <div id="movie-history-table-wrapper">
+                <table id="movie-history-table">
+                    <tr id="table-header">
+                        <th></th>
+                        <th>Archived movies</th>
+                        <th>Total votes</th>
+                        <th></th>
+                    </tr>
+                    {%for object in instance_archive %}
+                    <tr id="{{ object.movie }}">
+                        <td></td>
+                        <td>{{ object.movie }}</td>
+                        <td>{{ object.votes }}</td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <div id="archive-button">
+                    <i id="archive-button-element" class="fas fa-archive"></i>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

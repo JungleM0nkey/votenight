@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>Register</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+        <!--<script src="{{url_for('static', filename='node_modules/sortable/src/jquery-ui-1.10.1.custom.js')}}"></script>-->
+        <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
+        <script>
+            $(document).ready(function(){ 
+                $('#return-button').on('click', function(){
+                    window.location.href = '/login'
+                });
+            });
+
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="main">
+                <i id="return-button" class="fa fa-chevron-circle-left"></i>
+                <form id="register-form" action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {{ form.username.label }}<br>
+                        {{ form.username(size=32) }}
+                        <!-- Error Codes for username field go here -->
+                        {% for error in form.username.errors %}
+                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.password.label }}<br>
+                        {{ form.password(size=32) }}
+                        <!-- Error Codes for password field go here -->
+                        {% for error in form.password.errors %}
+                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.password_confirm.label }}<br>
+                        {{ form.password_confirm(size=32) }}
+                        <!-- Error Codes for password confirm field go here -->
+                        {% for error in form.password_confirm.errors %}
+                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.invite_code.label }}<br>
+                        {{ form.invite_code(size=32) }}
+                        <!-- Error Codes for invite code field go here -->
+                        {% for error in form.invite_code.errors %}
+                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
+                        {% endfor %}
+                    </p>
+                    
+                    <p>{{ form.submit() }}</p><br>
+                    
+                    <center><p style="color:rgb(207, 207, 207);margin-top:25px;">{{ error }}</p></center>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

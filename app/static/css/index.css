@@ -1,0 +1,410 @@
+html,
+body {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    height:100vh;
+    padding:0px;
+    margin:0px;
+    font-family:arial;
+
+}
+
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+#wrapper{
+    margin:0 auto;
+    width:1000px;
+    position: absolute;
+    top: 50%;
+    left:0;
+    right:0;
+    transform: translateY(-50%);
+    z-index:10;
+}
+
+#main{
+    width:1075px;
+    height:570px;
+    padding:20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius:5px;
+}
+
+h1{
+    font-size:18px;
+    margin:0px;
+    color:white;
+}
+
+input{
+    border:none;
+    border-radius:5px;
+    padding:4px;
+}
+
+label{
+    color:white;
+}
+
+#submit-button{
+    padding:7px;
+    width:100px;
+    float:right;
+    background-color:rgba(0, 0, 0, 0.589);
+    color:white;
+    transition:0.4s;
+    cursor: pointer;
+}
+
+#submit-button:hover{
+    background-color:black;
+}
+
+#logout-button{
+    margin-top:10px;
+    padding:3px;
+    width:130px;
+    background-color:rgba(255, 255, 255, 0.589);
+    color:black;
+    transition:0.4s;
+    cursor: pointer;
+}
+
+#logout-button:hover{
+    background-color:rgb(221, 221, 221);
+}
+
+#pwchange-button{
+    padding:3px;
+    width:130px;
+    background-color:rgba(255, 255, 255, 0.589);
+    color:black;
+    transition:0.4s;
+    cursor: pointer;
+}
+
+#pwchange-button:hover{
+    background-color:rgb(221, 221, 221);
+}
+
+/* Top UI part div*/
+#user-area-top{
+    width:100%;
+    height:16%;
+    
+}
+
+#user-area-top span{
+    color:white;
+}
+
+#home-button{
+    border:none;
+    background-color:#ffffff73;
+    float:left;
+    font-size: 14px;
+    height:25px;
+    color:#ffffff;
+    border-radius:5px;
+    transition:0.4s;
+}
+
+#home-button:hover{
+    cursor:pointer;
+    color:black;
+    background-color:rgb(221, 221, 221);
+}
+
+#welcome-message{
+    float:right;
+}
+
+#home-button-menu-results{
+    float:left;
+    width:160px;
+    height:auto;
+    text-align:center;
+    border-radius:5px;
+    background-color:rgba(255, 255, 255, 0.452);
+    position:absolute;
+    top:50px;
+}
+
+#home-button-menu-results a{
+    float:left;
+    color:white;
+    width:100%;
+    box-sizing: border-box;
+    padding:5px;
+    text-decoration: none;
+    transition:0.4s;
+}
+
+
+#home-button-menu-results a:hover{
+    color:black;
+}
+
+#your-points-field{
+    margin-left:6px;
+    width:90px;
+    height:20px;
+    float:left;
+    border-radius:5px;
+    text-align:center;
+    padding:2.6px;
+    line-height:20px;
+    background-color:rgba(255, 255, 255, 0.452);
+    
+}
+#points{
+    color:white;
+    transition: color 1s;
+}
+
+.flash {
+     animation-name: flash;
+     animation-duration: 0.2s;
+     animation-timing-function: linear;
+     animation-iteration-count: infinite;
+     animation-direction: alternate;
+     animation-play-state: running;
+ }
+ 
+ @keyframes flash {
+     from {color: white;}
+     to {color: yellow;}
+ }
+
+#next-date{
+    float:left;
+    padding:2.6px;
+    margin-left:5px;
+}
+
+/*Middle ui part div*/
+#user-area-mid{
+    width:100%;
+    
+    
+}
+
+#addmovie-field{
+    float:left;
+    width:228px;
+    float:left;
+    border-radius:5px;
+}
+
+/*#addmovie-button{
+    padding:4px;
+    width:100px;
+    background-color:rgba(0, 0, 0, 0.589);
+    color:white;
+    transition:0.4s;
+    cursor: pointer;
+    margin-left:5px;
+}*/
+
+#addmovie-button{
+    font-size:30px;
+    line-height:25px;
+    margin:0;
+    color:rgba(0, 0, 0, 0.473);
+    transition:0.4s;
+    cursor: pointer;
+    margin-left:4px;
+}
+
+#addmovie-button:hover{
+    color:black;
+}
+
+#movie-add-area{
+    position: absolute;
+}
+
+#movie-poster{
+    margin-top:15px;
+    width:260px;
+    height:390px;
+    border-radius:5px;
+    background-color:rgba(0, 0, 0, 0.13);
+    background-image: url('/static/images/no-movie-poster.png');
+    float:left;
+}
+
+#movie-imdbpage a{
+    color: black;
+    
+}
+
+#search-results{
+    border:none;
+    background-color:rgb(255, 255, 255);
+    width:228px;
+    height:auto;
+    position:absolute;
+    transition: .1s linear;
+    max-height:200px;
+    overflow-y: scroll;
+    top:25px;
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+    height: 100%; 
+    width: 6px;
+}
+
+#search-results span{
+    font-size:11px;
+}
+
+/*#search-results .search-result:last-child{
+    border-radius:0px 0px 0px 10px ;
+}*/
+
+.search-result{
+    padding:3px;
+    color:black;
+    border-bottom:1px solid rgba(0, 0, 0, 0.781);
+}
+
+.search-result:hover{
+    background-color:rgba(0, 0, 0, 0.781);
+    cursor: pointer;
+    color:white;
+}
+
+#movie-info{
+    width:340px;
+    height:100%;
+    float:left;
+    padding:7px;
+    border-right:1px solid rgba(255, 255, 255, 0.527);
+    box-sizing: border-box;
+    overflow-y:scroll;
+    scrollbar-width: none;
+    position:relative;
+}
+
+#movie-info .movie-property{
+    font-weight:bolder;
+}
+
+#refresh-movie{
+    position: absolute;
+    color:rgba(255, 255, 255, 0.534);
+    bottom:0;
+    left:150;
+    font-size:12px;
+}
+#refresh-movie:hover{
+    color:rgb(255, 255, 255);
+    cursor:pointer;
+}
+
+#movie-info span{
+    color:rgb(255, 255, 255);
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+#movie-poster{
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: opacity .6s ease-in-out;
+    margin-top:30px;
+}
+
+/*Loading icon starts*/
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-top:120px;
+    
+}
+.lds-ellipsis div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    transition:0.1s;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+0% {
+    transform: scale(0);
+}
+100% {
+    transform: scale(1);
+}
+}
+@keyframes lds-ellipsis3 {
+0% {
+    transform: scale(1);
+}
+100% {
+    transform: scale(0);
+}
+}
+@keyframes lds-ellipsis2 {
+0% {
+    transform: translate(0, 0);
+}
+100% {
+    transform: translate(24px, 0);
+}
+}
+/*Loading icon ends*/
+
+#movie-que-area{
+    border-radius:5px;
+    background-color:rgba(0, 0, 0, 0.13);
+    width:auto;
+    height:400px;
+    float:right;
+    padding:10px;
+}
+
+#user-profile-button:hover{
+    text-decoration: underline;
+}
+
+.blurelement{
+    filter: blur(10px);
+}
+

@@ -1,0 +1,299 @@
+#movie-que-table-wrapper{
+    overflow-y:scroll;
+    height:100%;
+    scrollbar-width: thin;
+    scrollbar-color: dark;
+    width:450px;
+}
+
+
+#movie-que-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+  }
+
+#movie-que-table{
+    color:white;
+    font-weight:normal;
+    text-align:left;
+    font-size:12px;
+    border-spacing: 0px;
+    border-collapse: separate;
+    padding-left:3px;
+    padding-top:5px;
+    margin-bottom:90px;
+}
+
+#vote-button-plus{
+    margin-left:4px;
+}
+
+#vote-button-minus{
+    margin-left:4px;
+}
+
+#vote-button-plus:hover{
+    cursor:pointer;
+    color:rgb(255, 179, 0);
+}
+
+#vote-button-minus:hover{
+    cursor:pointer;
+    color:rgb(0, 140, 255);
+}
+
+#movie-que-table th:first-child{
+    width:15px;
+}
+
+#movie-que-table th:nth-child(2){
+    width:250px;
+    
+}
+
+#movie-que-table th:nth-child(4){
+    width:50px;
+}
+
+#movie-que-table th:last-child{
+    width:12px;
+}
+
+#movie-que-table th{
+    width:100px;
+}
+
+#movie-que-table tr:hover{
+    background-color:rgba(0, 0, 0, 0.164);
+    color:white;
+}
+
+#movie-que-table tr:nth-child(1):hover{
+    background-color:rgba(0, 0, 0, 0);
+    cursor: default;
+}
+
+#movie-que-table td{
+    padding: 2.5px;
+    cursor:pointer;
+    
+}
+
+.selected-movie{
+    background-color:rgba(0, 0, 0, 0.473);
+}
+
+#movie-que-table .selected-movie:hover{
+    background-color:rgba(0, 0, 0, 0.473);
+}
+
+.vote-row{
+    font-size:11px;
+    color:rgba(255, 255, 255, 0.596);
+    background-color:rgba(0, 0, 0, 0.068);
+}
+
+/* Last week movies table */
+
+#table-separator{
+    width:100%;
+    
+    border-top: 1px solid rgba(255, 255, 255, 0.527);
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+#movie-lw-table{
+    color:rgba(255, 255, 255, 0.774);
+    font-weight:normal;
+    text-align:left;
+    font-size:12px;
+    border-spacing: 0px;
+    border-collapse: separate;
+    padding-left:3px;
+    padding-top:5px;
+}
+
+#movie-lw-table th:first-child{
+    width:15px;
+}
+
+#movie-lw-table th:nth-child(2){
+    width:250px;
+}
+
+#movie-lw-table th:nth-child(4){
+    width:50px;
+}
+#movie-lw-table th:last-child{
+    width:12px;
+}
+
+#movie-lw-table th{
+    width:100px;
+    color:white;
+}
+
+#movie-lw-table tr:hover{
+    background-color:rgba(0, 0, 0, 0.164);
+    color:white;
+}
+
+#movie-lw-table tr:nth-child(1):hover{
+    background-color:rgba(0, 0, 0, 0);
+    cursor: default;
+}
+
+#movie-lw-table td{
+    padding: 2.5px;
+    cursor:pointer;
+    
+}
+
+#movie-lw-table .selected-movie{
+    color:white;
+}
+
+#movie-lw-table .selected-movie:hover{
+    background-color:rgba(0, 0, 0, 0.473);
+}
+
+#cue-button-plus{
+    color:white;
+    font-size:12px;
+}
+
+#cue-button-plus:hover{
+    color:rgb(255, 179, 0);
+
+}
+
+.delete_button{
+    margin-left:2px;
+    font-size:13px;
+    color:rgba(255, 255, 255, 0.192);
+}
+
+.delete_button:hover{
+    color:red;
+}
+
+/* HISTORY TAB*/
+#movie-history-table-wrapper{
+    position:absolute;
+    right:-115px;
+    top:115px;
+    height:300px;
+    width:0px;
+    /*transition:0.5s;*/
+    z-index:-10;
+    /*overflow:hidden;*/
+    background-color: rgba(0, 0, 0, 0.2);
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    overflow-y: scroll;
+    padding-bottom:10px;
+}
+
+#movie-history-table-wrapper::-webkit-scrollbar{
+    width: 0px;
+    background: transparent; /* Chrome/Safari/Webkit */
+}
+
+
+#movie-history-table-wrapper i{
+    color:rgba(255, 255, 255, 0.746);   
+}
+
+#movie-history-table{
+    /*background-color: rgba(0, 0, 0, 0.2);*/
+    padding-top:10px;
+    background-color:none;
+    transition:0.5s;
+    color:rgba(255, 255, 255, 0);
+    font-weight:normal;
+    text-align:left;
+    font-size:12px;
+    border-spacing: 0px;
+    border-collapse: separate;
+    padding-left:3px;
+    float:left;
+    width:1px;
+    white-space: nowrap;
+}
+
+
+#archive-button{
+    background-color: rgba(0, 0, 0, 0.2);
+    width:20px;
+    height:25px;
+    float:left;
+    padding-top:10px;
+    padding-left:5px;
+    padding-right:5px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    /*position:absolute;
+    right:-30px;*/
+    position:fixed;
+    right:-145px;
+}
+
+#archive-button:hover >  i{
+    color:white;
+}
+
+#archive-button:hover{
+    cursor:pointer;
+}
+
+#archive-button-element{
+    transition:0.5s;
+}
+.archive-table-open{
+    /*using this as a tag for js*/
+}
+
+#movie-history-table th:first-child{
+    width:15px;
+}
+
+#movie-history-table th:nth-child(2){
+    width:250px;
+}
+
+#movie-history-table th:nth-child(4){
+    width:50px;
+}
+#movie-history-table th:last-child{
+    width:12px;
+}
+
+#movie-history-table th{
+    width:100px;
+
+}
+
+#movie-history-table tr:hover{
+    background-color:rgba(0, 0, 0, 0.164);
+
+}
+
+#movie-history-table tr:nth-child(1):hover{
+    background-color:rgba(0, 0, 0, 0);
+    cursor: default;
+}
+
+#movie-history-table td{
+    padding: 2.5px;
+    cursor:pointer;
+    
+}
+
+#movie-lw-table .selected-movie{
+    color:white;
+}
+
+#movie-lw-table .selected-movie:hover{
+    background-color:rgba(0, 0, 0, 0.473);
+}

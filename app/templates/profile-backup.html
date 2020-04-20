@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>My Votenight Profile</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"> 
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+        <!--<script src="{{url_for('static', filename='node_modules/sortable/src/jquery-ui-1.10.1.custom.js')}}"></script>-->
+        <script type="text/javascript" src="{{url_for('static', filename='js/profile.js')}}"></script>
+        <script>
+            $(document).ready(function(){ 
+                $('#return-button').on('click', function(){
+                    window.location.href = '/login'
+                });
+
+                $('#user-movies-table').on("click", 'tr', function(event){
+                    if( ($(this).attr('id') == 'table-header') ){
+                        //ignore if header
+                    }else{
+                        movie_row = $(this)
+                        selectmovie(movie_row)
+                    }
+                });
+                if($('#user-movies-table tr').length-1 > 0){
+                    selectmovie($('#user-movies-table tr:nth-child(2)'));
+                }
+            });
+
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="main">
+                <i id="return-button" class="fa fa-chevron-circle-left"></i>
+                <h1 id="username-header">User: {{ user.username }}</h1>
+                <div id="mid">
+                    <div id="user-movies-table-area">
+                        <div class="left">
+                            <table id="user-movies-table">
+                                <tr id="table-header">
+                                    <th></th>
+                                    <th>Submitted Movies</th>
+                                    <th>Date Submitted</th>
+                                    <th></th>
+                                </tr>
+                                {%for object in user_movies %}
+                                <tr id="{{ object.movie }}">
+                                    <td></td>
+                                    <td>{{ object.movie }}</td>
+        
+                                    <td>{{ object.date.date() }}</td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <div class="right">
+                            <table id="user-votes-table">
+                                <tr id="table-header">
+                                    <th></th>
+                                    <th>Voted Movies</th>
+                                    <th>Date Voted</th>
+                                    <th></th>
+                                </tr>
+                                {%for object in user_votes %}
+                                <tr id="{{ object.movie }}">
+                                    <td></td>
+                                    <td>{{ object.movie }}</td>
+                                    <td>{{ object.date.date() }}</td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
