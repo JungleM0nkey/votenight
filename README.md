@@ -1,3 +1,4 @@
+![alt text](https://i.imgur.com/p17S3jI.png "votenight.ca preview")
 Flask application for voting on Movies & TV Shows
 
 Setup:
