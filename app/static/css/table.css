@@ -193,6 +193,8 @@
     -ms-overflow-style: none;  /* IE 10+ */
     overflow-y: scroll;
     padding-bottom:10px;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
 }
 
 #movie-history-table-wrapper::-webkit-scrollbar{
@@ -209,8 +211,7 @@
     /*background-color: rgba(0, 0, 0, 0.2);*/
     padding-top:10px;
     background-color:none;
-    transition:0.5s;
-    color:rgba(255, 255, 255, 0);
+    color:rgba(255, 255, 255, 1);
     font-weight:normal;
     text-align:left;
     font-size:12px;
@@ -218,8 +219,8 @@
     border-collapse: separate;
     padding-left:3px;
     float:left;
-    width:1px;
-    white-space: nowrap;
+    width:290px;
+    table-layout: fixed
 }
 
 
@@ -254,12 +255,18 @@
     /*using this as a tag for js*/
 }
 
+#movie-history-table th{
+    border-bottom:1px solid rgba(255, 255, 255, 0.548);
+}
+
 #movie-history-table th:first-child{
-    width:15px;
+    width:5px;
+    
 }
 
 #movie-history-table th:nth-child(2){
-    width:250px;
+    width:220px;
+    
 }
 
 #movie-history-table th:nth-child(4){
@@ -267,11 +274,6 @@
 }
 #movie-history-table th:last-child{
     width:12px;
-}
-
-#movie-history-table th{
-    width:100px;
-
 }
 
 #movie-history-table tr:hover{
@@ -287,7 +289,7 @@
 #movie-history-table td{
     padding: 2.5px;
     cursor:pointer;
-    
+    width:50px;
 }
 
 #movie-lw-table .selected-movie{

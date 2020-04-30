@@ -16,7 +16,7 @@
                 $("#home-button-menu-results").hide();
                 $('#movie-vote-area').hide();
                 $('#search-results').hide();
-                $('#movie-history-table').hide()
+                //$('#movie-history-table').hide()
                 //toggles between the top-left menu button results being open and closed
                 $("#home-button").click(function() {
                     $("#home-button-menu-results").toggle("fast");
@@ -346,7 +346,7 @@
 
                 $('#archive-button').on('click', function(){
                     if (!$(this).hasClass('archive-table-open')){
-                        $('#movie-history-table').fadeIn('fast');
+                        //$('#movie-history-table').fadeIn('fast');
                         console.log('Opening Archive tab');
                         //$('#movie-history-table-wrapper').css('right', '-405px');
                         //$('#movie-history-table-wrapper').css('width', '290px');
@@ -357,8 +357,8 @@
                         //$('#movie-history-table-wrapper::-webkit-scrollbar').css('width','0px');
                         //$('#movie-history-table-wrapper::-webkit-scrollbar').css('background','transparent');
                         //$('#movie-history-table').show("slide", { direction: "right" }, 400);
-                        $('#movie-history-table').css('width', '290px');
-                        $('#movie-history-table').css('color','rgba(255, 255, 255, 1)');
+                        //$('#movie-history-table').css('width', '290px');
+                        //$('#movie-history-table').css('color','rgba(255, 255, 255, 1)');
                         $('#archive-button-element').css('transform', 'rotate(90deg)');
                         
                         $(this).addClass('archive-table-open');
@@ -369,11 +369,11 @@
                         $('#movie-history-table-wrapper').animate({ right:'-115px'},{duration:335,queue: false});
                         $('#movie-history-table-wrapper').animate({ 'width':'0px'},{duration:335,queue: false});
                         $("#archive-button").animate({ right:'-145px'},{duration:335,queue: false});
-                        $('#movie-history-table').css('width', '0px');
-                        $('#movie-history-table').css('color','rgba(255, 255, 255, 0)');
+                        //$('#movie-history-table').css('width', '0px');
+                        //$('#movie-history-table').css('color','rgba(255, 255, 255, 0)');
                         $('#archive-button-element').css('transform', 'rotate(360deg)')
                         $(this).removeClass('archive-table-open');
-                        $('#movie-history-table').fadeOut('fast');
+                        //$('#movie-history-table').fadeOut('fast');
                     }
 
                 });
