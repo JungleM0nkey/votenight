@@ -1,4 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask import render_template, flash, redirect, url_for, request, jsonify, abort, g
+from flask_httpauth import HTTPBasicAuth
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app
 from app import db
@@ -10,6 +11,8 @@ from imdb import IMDb
 from sqlalchemy import or_, and_
 import imageio
 import numpy as np
+
+auth = HTTPBasicAuth()
 
 @app.route('/', methods=['GET','POST'])
 @app.route('/login', methods=['GET','POST'])
@@ -300,3 +303,55 @@ def deletemovie():
         return jsonify({'removed':True})
     else:
         return u'Movie does not belong to user', 400
+
+
+### API ###
+
+@auth.verify_password
+def verify_password(username, password):
+    user = User.query.filter_by(username = username).first()
+    if not user or not user.check_password(password):
+        return False
+    g.user = user
+    return True
+
+def fetch_movies():
+    movies_list = []
+    movies = Movies.query.all()
+    for movie in movies:
+        movie_id = movie.id 
+        movie_name = movie.movie
+        movie_votes = movie.votes 
+        movie_user = movie.username
+        movie_date = movie.date
+        movie_object = {'id':movie_id,
+                        'name':movie_name,
+                        'votes':movie_votes,
+                        'user':movie_user,
+                        'date':movie_date}
+        movies_list.append(movie_object)
+    return movies_list
+
+def make_public_movie(movie):
+    new_movie = {}
+    for field in movie:
+        if field == 'id':
+            new_movie['uri'] = url_for('get_movie', movie_id=movie['id'], _external=True)
+        else:
+            new_movie[field] = movie[field]
+    return new_movie
+
+@app.route('/api/1.0/movies', methods=['GET'])
+@auth.login_required
+def get_movies():
+    movies_list = fetch_movies()
+    return jsonify({ 'movies': [make_public_movie(movie) for movie in movies_list] })
+
+@app.route('/api/1.0/movies/<int:movie_id>', methods=['GET'])
+@auth.login_required
+def get_movie(movie_id):
+    movies_list = fetch_movies()
+    movie = [ x for x in movies_list if x['id'] == movie_id ]
+    if len(movie) == 0:
+        abort(404)
+    return jsonify({'movie':movie[0]})
