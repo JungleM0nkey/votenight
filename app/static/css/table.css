@@ -257,6 +257,7 @@
 
 #movie-history-table th{
     border-bottom:1px solid rgba(255, 255, 255, 0.548);
+    padding-bottom:5px;
 }
 
 #movie-history-table th:first-child{
@@ -291,6 +292,7 @@
     cursor:pointer;
     width:50px;
 }
+
 
 #movie-lw-table .selected-movie{
     color:white;
