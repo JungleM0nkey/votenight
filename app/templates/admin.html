@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <title>Movienite Votehub</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"> 
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
+        <!--<script src="{{url_for('static', filename='node_modules/sortable/src/jquery-ui-1.10.1.custom.js')}}"></script>-->
+        <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
+        <script type="text/javascript" src="{{url_for('static', filename='js/profile.js')}}"></script>
+        <script>
+            $(document).ready(function(){
+                $('body').attr('spellcheck', false);
+                //open the user type selection dropdown
+                $('#users-table td:last-child').on('click', function(event){
+                    $('#type-dropdown').remove();
+                    $(this).append(`
+                        <div id="type-dropdown">
+                                <div class="selection"><i class="fas fa-caret-down"></i><span>user</span></div>
+                                <div class="selection"><span>admin</span></div>
+                        </div>
+                    `);
+                });
+
+                //change the user type from the dropdown
+                $('#users-table td:last-child').on('click','.selection', function(e){
+                    e.stopPropagation();
+                    console.log('Changing user type');
+                    dropdown_menu = $(this).parent();
+                    changed_field = dropdown_menu.parent();
+                    user_type = $(this).find('span').text();
+                    changed_field.find('span').text(user_type); //adds text to the field
+                    dropdown_menu.remove()
+                });
+
+                $('#users-table td').on('click', function(){
+                    if ($(this).attr('id') != 'user-type'){
+                        $('#type-dropdown').remove();
+                    }
+                    $('td').removeClass('selected-item');
+                    $(this).addClass('selected-item');
+                });
+
+                $('#return-button').on('click', function(){
+                    window.location.href = '/'
+                });
+
+                $('#refresh-points').on('click', function(){
+                    $('.user-points').text('1')
+                });
+
+                //deselect selected items if clicked anywhere on the document
+                $(document).on('click', function(e){
+                    var target = $( e.target );
+                    if ( !target.is('td') ){
+                        $('.selected-item').removeClass('selected-item');
+                    }
+                });
+
+                $('#apply-users-button').on('click', function(){
+                    console.log('Submitting changes to the Users table')
+                    user_dictionary = {};
+                    $('#users-table tr').each(function(i, row){
+                        if(i != 0){
+                            user_data = []
+                            row = $(row)
+                            row.find('br').remove()//fixes br insertions from contenteditable
+                            username = row.find('.user-name').text()
+                            points = row.find('.user-points').html()
+                            email = row.find('.user-email').html()
+                            type = row.find('#user-type-text').text()
+                            user_data.push(parseInt(points),email,type)
+                            user_dictionary[username] = user_data
+                        }
+                    });
+                    //user_dictionary = JSON.stringify(user_dictionary)
+                    $.ajax({
+                            url:'/applychanges',
+                            contentType: "application/json;charset=utf-8",
+                            data: JSON.stringify(user_dictionary),
+                            dataType: "json",
+                            type: 'POST',
+                            success: function(response){
+                                $('#apply-users-button').append(`<i class="fas fa-check"></i>`)
+                                console.log(response);
+                            },
+                            error: function(error){
+                                $('#apply-users-button').append(`<i class="fas fa-times"></i>`)
+                                console.log(response); 
+                            }
+                        });
+
+                });
+
+            });
+
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="main">
+                <div id="left">
+                    <i id="return-button" class="fa fa-chevron-circle-left"></i>
+                    <h1>Users</h1>
+                    <div id="users-table-wrapper">
+                        <table id="users-table">
+                            <tr id="table-header">
+                                <th>Username</th>
+                                <th>Points<i id="refresh-points" class="fa fa-sync-alt"></i></th>
+                                <th>Email</th>
+                                <th>User Type</th>
+                            </tr>
+                            {%for object in user_objects %}
+                            <tr>
+                                <td class="user-name">{{ object.username }}</td>
+                                <td class="user-points" contenteditable="true">{{ object.points }}</td>
+                                <td class="user-email" contenteditable="true">{{ object.email}}</td>
+                                <td id="user-type"><span id="user-type-text">{{ object.user_type }}</span><i class="fas fa-caret-down"></i></td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <button id="apply-users-button">Apply Changes</button>
+                </div>
+                <div id="right">
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

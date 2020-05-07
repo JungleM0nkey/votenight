@@ -7,7 +7,9 @@ body {
     padding:0px;
     margin:0px;
     font-family:arial;
+
 }
+
 
 @keyframes gradient {
     0% {
@@ -21,15 +23,30 @@ body {
     }
 }
 
+#wrapper{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #main{
-    width:500px;
-    height:210px;
-    margin:auto;
-    position:fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
+    width:300px;
+    height:230px;
+    padding:20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius:5px;
+}
+
+#main-changepw{
+    width:300px;
+    height:180px;
     padding:20px;
     background-color: rgba(0, 0, 0, 0.2);
     border-radius:5px;
@@ -44,7 +61,8 @@ h1{
 input{
     border:none;
     border-radius:5px;
-    padding:5px;
+    padding:4px;
+    margin-top:10px;
 }
 
 label{
@@ -53,8 +71,8 @@ label{
 
 #submit-button{
     padding:7px;
-    width:100px;
-    float:right;
+    width:160px;
+    margin:0 auto;
     background-color:rgba(0, 0, 0, 0.589);
     color:white;
     transition:0.4s;
@@ -65,9 +83,11 @@ label{
     background-color:black;
 }
 
-a{
-    color:rgba(0, 0, 0, 0.61);
+#return-button{
+    color:rgba(255, 255, 255, 0.644);
 }
-a:hover{
-    color:black;
+
+#return-button:hover{
+    color:rgb(255, 255, 255);
+    cursor:pointer;
 }

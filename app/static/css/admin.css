@@ -1,0 +1,145 @@
+html,
+body {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    height:100vh;
+    padding:0px;
+    margin:0px;
+    font-family:arial;
+
+}
+
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+#wrapper{
+    margin:0 auto;
+    width:1000px;
+    position: absolute;
+    top: 50%;
+    left:0;
+    right:0;
+    transform: translateY(-50%);
+    z-index:10;
+}
+
+#main{
+    width:1075px;
+    height:570px;
+    padding:20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius:5px;
+}
+
+h1{
+    font-size:18px;
+    margin:0px;
+    color:white;
+}
+
+input{
+    border:none;
+    border-radius:5px;
+    padding:4px;
+}
+
+label{
+    color:white;
+}
+
+#submit-button{
+    padding:7px;
+    width:100px;
+    float:right;
+    background-color:rgba(0, 0, 0, 0.589);
+    color:white;
+    transition:0.4s;
+    cursor: pointer;
+}
+
+#submit-button:hover{
+    background-color:black;
+}
+
+#apply-users-button{
+    margin-top:5px;
+    padding:4px;
+    width:130px;
+    float:right;
+    background-color:rgba(0, 0, 0, 0.589);
+    color:white;
+    transition:0.4s;
+    cursor: pointer;
+    border:none;
+    border-radius:5px;
+}
+
+#apply-users-button:hover{
+    background-color:black;
+}
+
+#left{
+    float:left;
+}
+
+
+#type-dropdown{
+    width:70px;
+    background-color:rgba(0, 0, 0, 0.787);
+    height:43px;
+    border-radius:0px 10px 0px 10px;
+    float:right;
+    z-index:10;
+    position:absolute;
+    top:7;
+    right:-46;
+    color:rgb(255, 255, 255);
+    font-size:15px;
+}
+
+#type-dropdown .selection{
+    text-align:center;
+}
+
+#type-dropdown .selection:first-child{
+    border-bottom:1px solid rgba(255, 255, 255, 0.767);
+    padding-bottom:2px;
+}
+
+
+#type-dropdown .selection:last-child{
+    
+}
+
+#type-dropdown .selection .fa-caret-down{
+    float:left;
+}
+
+#return-button{
+    color:rgba(255, 255, 255, 0.644);
+    margin-bottom:10px;
+}
+
+#return-button:hover{
+    color:rgb(255, 255, 255);
+    cursor:pointer;
+}
+
+.fa-check{
+    padding-left:10px;
+}
+
+.fa-times{
+    padding-left:10px;
+}

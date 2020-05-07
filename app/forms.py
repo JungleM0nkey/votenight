@@ -1,6 +1,6 @@
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm,  RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -21,7 +21,16 @@ class ProfilePasswordForm(FlaskForm):
     new_password_confirm = PasswordField('Confirm new Password', validators=[DataRequired(), Length(max=64)])
     submit = SubmitField('Change Password', id='submit-button-pw')
     
-
 class ProfileEmailForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Length(max=16)])
+    email = StringField('Email', validators=[DataRequired(), Email("This field requires a valid email address")])
     submit = SubmitField('Change Email', id='submit-button-email')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email("This field requires a valid email address")])
+    recaptcha = RecaptchaField()
+    submit = SubmitField('Request Password Reset')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Change Password')

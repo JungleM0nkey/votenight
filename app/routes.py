@@ -3,7 +3,8 @@ from flask_httpauth import HTTPBasicAuth
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app
 from app import db
-from app.forms import LoginForm, RegisterForm, ProfilePasswordForm, ProfileEmailForm
+from app.forms import LoginForm, RegisterForm, ProfilePasswordForm, ProfileEmailForm, ResetPasswordRequestForm, ResetPasswordForm
+from app.email import send_password_reset_email
 from app.models import User, Movies, Code, Votes
 from werkzeug.urls import url_parse
 import datetime
@@ -76,7 +77,7 @@ def register():
         elif not existing_code or existing_code.username != None:
             error = 'Wrong invite code'
             return render_template('register.html', form=form, error=error)
-        new_user = User(username=username,points=1)
+        new_user = User(username=username,points=1,user_type='user')
         new_user.set_password(password)
         existing_code.username = username
         db.session.add(new_user)
@@ -355,3 +356,59 @@ def get_movie(movie_id):
     if len(movie) == 0:
         abort(404)
     return jsonify({'movie':movie[0]})
+
+#Admin Control Panel
+
+@app.route('/admin', methods=['GET'])
+@login_required
+def admin():
+    users = User.query.all()
+    return render_template('admin.html',user_objects = users)
+
+@app.route('/applychanges', methods=['POST','GET'])
+@login_required
+def applychanges():
+    user_dictionary = request.get_json()
+    #users = user_dictionary.keys()
+    for u in user_dictionary:
+        print(f'Updating User {u} with: {user_dictionary[u]}')
+        points = user_dictionary[u][0]
+        email = user_dictionary[u][1]
+        if email == 'None':
+            email = None
+        user_type = user_dictionary[u][2]
+        user = User.query.filter_by(username=u).first()
+        user.email = email
+        user.points = points
+        user.user_type = user_type
+    db.session.commit()
+    return jsonify({'response':'done'})
+
+#Password reset 
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Password reset link sent to email')
+        return redirect(url_for('login'))
+    return render_template('pwreset.html', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('changepw.html', form=form)

@@ -408,3 +408,25 @@ label{
     filter: blur(10px);
 }
 
+/* Admin Control Panel */
+
+#admin-cp-button{
+    margin-left:6px;
+    width:auto;
+    height:25px;
+    float:left;
+    border-radius:5px;
+    text-align:center;
+    vertical-align: middle;
+    color:white;
+    font-size:16px;
+    background-color:rgba(255, 255, 255, 0.452);
+    border:none;
+    transition:0.5s;
+}
+
+#admin-cp-button:hover{
+    cursor:pointer;
+    color:black;
+    background-color:rgba(255, 255, 255, 0.794);
+}

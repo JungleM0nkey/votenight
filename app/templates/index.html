@@ -378,6 +378,11 @@
 
                 });
 
+                $('#admin-cp-button').on('click', function(){
+                    console.log('Opening Admin panel');
+                    location.href = "/admin";
+                });
+
             });
 
         </script>
@@ -388,6 +393,9 @@
                 <!--Top part of the UI-->
                 <div id="user-area-top">
                     <button id="home-button"><i class="fa fa-bars"></i></button>
+                    {% if current_user.user_type == 'admin' %}
+                        <button id="admin-cp-button">Admin Panel</button>
+                    {% endif %}
                     <div id="your-points-field">
                         {% if points == 1 %}
                             <span id="points">{{ points }} point 🎬</span>

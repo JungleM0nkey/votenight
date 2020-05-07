@@ -23,9 +23,20 @@
                             <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
                         {% endfor %}
                     </p>
-                    <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+                    <p><a href="{{ url_for('reset_password_request') }}">Forgot my password</a></p>
+                  <!--  <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p> -->
                     <p>{{ form.submit() }}</p>
                     <p style="color:rgb(207, 207, 207)">{{ error }}</p>
+                    <!--Password reset messages get flashed here-->
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+
+                                {{ message }}
+
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
                 </form>
             </div>
         </div>

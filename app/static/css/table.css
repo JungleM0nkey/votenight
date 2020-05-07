@@ -301,3 +301,90 @@
 #movie-lw-table .selected-movie:hover{
     background-color:rgba(0, 0, 0, 0.473);
 }
+
+
+/* Admin Panel */
+
+
+#users-table-wrapper{
+    margin-top:5px;
+    background-color: rgba(0, 0, 0, 0.247);
+    padding:10px;
+    border-radius:5px;
+    width:470px;
+    height:400px;
+}
+
+
+#users-table{
+    color:rgba(255, 255, 255, 0.87);
+    font-weight:normal;
+    text-align:left;
+    font-size:15px;
+    border-spacing: 0px;
+    border-collapse: separate;
+    padding-left:3px;
+    padding-top:5px;
+    margin-bottom:90px;
+}
+
+
+#users-table th{
+    color:white;
+    width:100px;
+    text-align:center;
+    border-bottom:1px solid white;
+    padding-bottom:5px;
+}
+
+#users-table td:first-child{
+    text-align:left;
+}
+
+.selected-item{
+    background-color:rgba(0, 0, 0, 0.315);
+}
+
+#users-table td:hover{
+    background-color:rgba(0, 0, 0, 0.315);
+}
+
+#users-table td:last-child{
+    text-align:right;
+    
+}
+
+#users-table td{
+    text-align:center;
+    padding:5px;
+    cursor:pointer;
+    width:100px;
+}
+
+#user-type{
+    
+    position:relative;
+}
+
+#user-type-text{
+    cursor:pointer;
+    padding-right:5px;
+}
+
+.fa-caret-down{
+    color:white;
+    padding-left:10px;
+}
+
+.fa-caret-down:hover{
+    cursor:pointer;
+}
+
+#refresh-points{
+    font-size:13px;
+    padding-left:5px;
+}
+
+#refresh-points:hover{
+    cursor:pointer;
+}

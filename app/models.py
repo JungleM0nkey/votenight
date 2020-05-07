@@ -1,8 +1,11 @@
+from app import app
 from app import db, login
 from datetime import datetime
+from time import time
 from pytz import timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+import jwt
 
 tz = timezone('EST')
 
@@ -13,6 +16,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     points = db.Column(db.Integer)
     last_vote = db.Column(db.String(80))
+    user_type = db.Column(db.String)
 
     def __repr__(self):
         return self.username
@@ -28,6 +32,17 @@ class User(UserMixin, db.Model):
 
     def remove_point(self):
         self.points = self.points - 1
+
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode({'reset_password': self.id, 'exp': time() + expires_in}, app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'],  algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)
 
 class Movies(db.Model):
     id = db.Column(db.Integer, primary_key=True)
