@@ -8,8 +8,8 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     #recaptcha
     RECAPTCHA_USE_SSL = False
-    RECAPTCHA_PUBLIC_KEY = '6LcFCfQUAAAAANdXxEeHfDzKu_NkWhgIYR5Ht2-0'
-    RECAPTCHA_PRIVATE_KEY = '6LcFCfQUAAAAAK7xSi0VLQ1fsCRWgr36t5vKtz6o'
+    RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+    RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
     RECAPTCHA_OPTIONS = {'theme':'white'}
     #mail server
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
