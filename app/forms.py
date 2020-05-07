@@ -12,6 +12,7 @@ class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(max=16)])
     password = PasswordField('Password', validators=[DataRequired(), Length(max=64)])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), Length(max=64)])
+    email = StringField('Email', validators=[DataRequired(), Email("This field requires a valid email address")])
     invite_code = StringField('Invite Code', validators=[DataRequired()])
     submit = SubmitField('Register', id='submit-button')
 

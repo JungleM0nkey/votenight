@@ -69,6 +69,7 @@ def register():
         #username = username.lower()
         password = form.password.data
         password_confirm = form.password_confirm.data
+        email = form.email.data
         invite_code = form.invite_code.data
         existing_code = Code.query.filter_by(code=invite_code).first()
         if password != password_confirm:
@@ -77,7 +78,7 @@ def register():
         elif not existing_code or existing_code.username != None:
             error = 'Wrong invite code'
             return render_template('register.html', form=form, error=error)
-        new_user = User(username=username,points=1,user_type='user')
+        new_user = User(username=username,points=1,email=email,user_type='user')
         new_user.set_password(password)
         existing_code.username = username
         db.session.add(new_user)
