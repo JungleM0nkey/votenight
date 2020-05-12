@@ -1,3 +1,4 @@
 app.backup.db
 app.db
+migrations/
 __pycache__/
