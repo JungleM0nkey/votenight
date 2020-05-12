@@ -364,24 +364,55 @@ def get_movie(movie_id):
 @login_required
 def admin():
     users = User.query.all()
-    return render_template('admin.html',user_objects = users)
+    movies = Movies.query.all()
+    return render_template('admin.html',user_objects=users, movie_objects=movies)
 
-@app.route('/applychanges', methods=['POST','GET'])
+@app.route('/applyuserchanges', methods=['POST','GET'])
 @login_required
-def applychanges():
+def applyuserchanges():
     user_dictionary = request.get_json()
     #users = user_dictionary.keys()
     for u in user_dictionary:
         print(f'Updating User {u} with: {user_dictionary[u]}')
         points = user_dictionary[u][0]
         email = user_dictionary[u][1]
+        updated_last_vote = user_dictionary[u][3]
         if email == 'None':
             email = None
+        if updated_last_vote == 'None':
+            updated_last_vote = None
         user_type = user_dictionary[u][2]
         user = User.query.filter_by(username=u).first()
+        #update email
         user.email = email
+        #update points
         user.points = points
+        #update user type
         user.user_type = user_type
+        #update the users last vote
+        current_last_vote = user.last_vote
+        user.last_vote = updated_last_vote
+        #update votes table if changes are detected in the last_vote user column
+        if current_last_vote != updated_last_vote:
+            voted_movie = Votes.query.filter_by(movie=current_last_vote).first()
+            voted_movie.category = 'archive'
+    db.session.commit()
+    return jsonify({'response':'done'})
+
+@app.route('/applymoviechanges', methods=['POST','GET'])
+@login_required
+def applymoviechanges():
+    movie_dictionary = request.get_json()
+    #users = user_dictionary.keys()
+    for m in movie_dictionary:
+        print(f'Updating Movie {m} with: {movie_dictionary[m]}')
+        votes = int(movie_dictionary[m][0])
+        category = movie_dictionary[m][1].strip()
+        movie = Movies.query.filter_by(movie=m).first()
+        #update votes
+        movie.votes = votes
+        #update category
+        movie.category = category
     db.session.commit()
     return jsonify({'response':'done'})
 

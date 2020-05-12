@@ -25,7 +25,7 @@ body {
 
 #wrapper{
     margin:0 auto;
-    width:1000px;
+    width:1320px;
     position: absolute;
     top: 50%;
     left:0;
@@ -35,7 +35,7 @@ body {
 }
 
 #main{
-    width:1075px;
+    width:1320px;
     height:570px;
     padding:20px;
     background-color: rgba(0, 0, 0, 0.2);
@@ -74,6 +74,27 @@ label{
 
 #apply-users-button{
     margin-top:5px;
+    margin-left:475px;
+    padding:4px;
+    width:180px;
+    float:right;
+    background-color:rgba(0, 0, 0, 0.589);
+    color:white;
+    transition:0.4s;
+    cursor: pointer;
+    border:none;
+    border-radius:5px;
+    float:left;
+}
+
+#apply-users-button:hover{
+    background-color:black;
+}
+
+
+#reset-votes-button{
+    margin-top:5px;
+    margin-right:5px;
     padding:4px;
     width:130px;
     float:right;
@@ -85,7 +106,7 @@ label{
     border-radius:5px;
 }
 
-#apply-users-button:hover{
+#reset-votes-button:hover{
     background-color:black;
 }
 
@@ -93,7 +114,7 @@ label{
     float:left;
 }
 
-
+/*user type dropdown*/
 #type-dropdown{
     width:70px;
     background-color:rgba(0, 0, 0, 0.787);
@@ -117,23 +138,71 @@ label{
     padding-bottom:2px;
 }
 
-
-#type-dropdown .selection:last-child{
-    
-}
-
 #type-dropdown .selection .fa-caret-down{
     float:left;
+}
+
+/*movie category dropdown*/
+
+#category-dropdown{
+    width:75px;
+    background-color:rgba(0, 0, 0, 0.787);
+    height:63px;
+    border-radius:0px 10px 0px 10px;
+    z-index:10;
+    position:absolute;
+    top: 7px;
+    right: -50px;
+    color:rgb(255, 255, 255);
+    font-size:15px;
+}
+
+#category-dropdown .selection{
+    text-align:center;
+}
+
+#category-dropdown .selection:first-child{
+    border-bottom:1px solid rgba(255, 255, 255, 0.767);
+    padding-bottom:2px;
+}
+
+#category-dropdown .selection:nth-child(2){
+    border-bottom:1px solid rgba(255, 255, 255, 0.767);
+    padding-bottom:2px;
+}
+
+#category-dropdown .selection:nth-child(3){
+}
+
+#category-dropdown .selection .fa-caret-down{
+    float:left;
+}
+
+#header{
+    
+    overflow:hidden;
 }
 
 #return-button{
     color:rgba(255, 255, 255, 0.644);
     margin-bottom:10px;
+    float:left;
 }
 
 #return-button:hover{
     color:rgb(255, 255, 255);
     cursor:pointer;
+}
+
+#users-header{
+    float:left;
+    margin:none;
+    margin-left:20px;
+}
+
+#movies-header{
+    float:right;
+    margin-right:525px;
 }
 
 .fa-check{
@@ -142,4 +211,54 @@ label{
 
 .fa-times{
     padding-left:10px;
+}
+
+#apply-movies-button{
+    margin-top:5px;
+    margin-right:70px;
+    padding:4px;
+    width:180px;
+    float:right;
+    background-color:rgba(0, 0, 0, 0.589);
+    color:white;
+    transition:0.4s;
+    cursor: pointer;
+    border:none;
+    border-radius:5px;
+}
+
+#apply-movies-button:hover{
+    background-color:black;
+}
+
+#footer{
+
+}
+
+#left{
+    margin-left:36px;
+    float:left;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    overflow-y: scroll;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    width:660px;
+    height:420px;
+    border-radius:5px;
+    
+}
+
+#right{
+    margin-left:36px;
+    float:left;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    overflow-y: scroll;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    width:560px;
+    height:420px;
+    border-radius:5px;
+   
 }

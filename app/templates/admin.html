@@ -23,10 +23,33 @@
                     `);
                 });
 
+                //open the movie category selection dropdown
+                $('#movies-table td:last-child').on('click', function(event){
+                    $('#category-dropdown').remove();
+                    $(this).append(`
+                        <div id="category-dropdown">
+                                <div class="selection"><i class="fas fa-caret-down"></i><span>archive</span></div>
+                                <div class="selection"><span>backlog</span></div>
+                                <div class="selection"><span>cue</span></div>
+                        </div>
+                    `);
+                });
+
                 //change the user type from the dropdown
                 $('#users-table td:last-child').on('click','.selection', function(e){
                     e.stopPropagation();
                     console.log('Changing user type');
+                    dropdown_menu = $(this).parent();
+                    changed_field = dropdown_menu.parent();
+                    user_type = $(this).find('span').text();
+                    changed_field.find('span').text(user_type); //adds text to the field
+                    dropdown_menu.remove()
+                });
+
+                //change the movie category from the dropdown
+                $('#movies-table td:last-child').on('click','.selection', function(e){
+                    e.stopPropagation();
+                    console.log('Changing movie category');
                     dropdown_menu = $(this).parent();
                     changed_field = dropdown_menu.parent();
                     user_type = $(this).find('span').text();
@@ -50,6 +73,11 @@
                     $('.user-points').text('1')
                 });
 
+                
+                $('#refresh-votes').on('click', function(){
+                    $('.user-last-vote').text('None')
+                });
+
                 //deselect selected items if clicked anywhere on the document
                 $(document).on('click', function(e){
                     var target = $( e.target );
@@ -58,6 +86,7 @@
                     }
                 });
 
+                //send new data to users table
                 $('#apply-users-button').on('click', function(){
                     console.log('Submitting changes to the Users table')
                     user_dictionary = {};
@@ -67,16 +96,17 @@
                             row = $(row)
                             row.find('br').remove()//fixes br insertions from contenteditable
                             username = row.find('.user-name').text()
+                            votes = row.find('.user-last-vote').text()
                             points = row.find('.user-points').html()
                             email = row.find('.user-email').html()
                             type = row.find('#user-type-text').text()
-                            user_data.push(parseInt(points),email,type)
+                            user_data.push(parseInt(points),email,type,votes)
                             user_dictionary[username] = user_data
                         }
                     });
                     //user_dictionary = JSON.stringify(user_dictionary)
                     $.ajax({
-                            url:'/applychanges',
+                            url:'/applyuserchanges',
                             contentType: "application/json;charset=utf-8",
                             data: JSON.stringify(user_dictionary),
                             dataType: "json",
@@ -93,6 +123,41 @@
 
                 });
 
+                //send new data to movies table
+                $('#apply-movies-button').on('click', function(){
+                    console.log('Submitting changes to the Movies table')
+                    movie_dictionary = {};
+                    $('#movies-table tr').each(function(i, row){
+                        if(i != 0){
+                            movie_data = []
+                            row = $(row)
+                            row.find('br').remove()//fixes br insertions from contenteditable
+                            moviename = row.find('.movie-name').text()
+                            votes = row.find('.movie-votes').text()
+                            category = row.find('#movie-category').text()
+                            movie_data.push(votes,category)
+                            movie_dictionary[moviename] = movie_data
+                        }
+                    });
+                    //user_dictionary = JSON.stringify(user_dictionary)
+                    $.ajax({
+                            url:'/applymoviechanges',
+                            contentType: "application/json;charset=utf-8",
+                            data: JSON.stringify(movie_dictionary),
+                            dataType: "json",
+                            type: 'POST',
+                            success: function(response){
+                                $('#apply-movies-button').append(`<i class="fas fa-check"></i>`)
+                                console.log(response);
+                            },
+                            error: function(error){
+                                $('#apply-movies-button').append(`<i class="fas fa-times"></i>`)
+                                console.log(response); 
+                            }
+                        });
+
+                });
+
             });
 
         </script>
@@ -100,13 +165,17 @@
     <body>
         <div id="wrapper">
             <div id="main">
-                <div id="left">
+                <div id="header">
                     <i id="return-button" class="fa fa-chevron-circle-left"></i>
-                    <h1>Users</h1>
+                    <h1 id="users-header">Users</h1>
+                    <h1 id="movies-header">Movies</h1>
+                </div>
+                <div id="left">
                     <div id="users-table-wrapper">
                         <table id="users-table">
                             <tr id="table-header">
                                 <th>Username</th>
+                                <th>Last Vote<i id="refresh-votes" class="fa fa-sync-alt"></i></th>
                                 <th>Points<i id="refresh-points" class="fa fa-sync-alt"></i></th>
                                 <th>Email</th>
                                 <th>User Type</th>
@@ -114,6 +183,7 @@
                             {%for object in user_objects %}
                             <tr>
                                 <td class="user-name">{{ object.username }}</td>
+                                <td class="user-last-vote">{{ object.last_vote }}</td>
                                 <td class="user-points" contenteditable="true">{{ object.points }}</td>
                                 <td class="user-email" contenteditable="true">{{ object.email}}</td>
                                 <td id="user-type"><span id="user-type-text">{{ object.user_type }}</span><i class="fas fa-caret-down"></i></td>
@@ -121,10 +191,29 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <button id="apply-users-button">Apply Changes</button>
                 </div>
                 <div id="right">
+                    <div id="movies-table-wrapper">
+                        <table id="movies-table">
+                            <tr id="table-header">
+                                <th>Movie</th>
+                                <th>Votes</th>
+                                <th>Category</th>
+                            </tr>
+                            {%for object in movie_objects %}
+                            <tr>
+                                <td class="movie-name"><div>{{ object.movie }}</div></td>
+                                <td class="movie-votes" contenteditable="true">{{ object.votes }}</td>
+                                <td id="movie-category" ><span id="movie-category-text">{{ object.category }}</span><i class="fas fa-caret-down"></i></td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
 
+                <div id="footer">
+                    <button id="apply-movies-button">Apply Movies Changes</button>
+                    <button id="apply-users-button">Apply Users Changes</button>
                 </div>
             </div>
         </div>
