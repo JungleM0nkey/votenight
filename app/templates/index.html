@@ -243,7 +243,8 @@
                     movie_rating = $('#movie-rating').text();
                     movie_genres = $('#movie-genres').text();
                     movie_director = $('#movie-director').text();
-                    movie_imdbpage = $('#movie-imdbpage').text();
+                    movie_imdbpage = $('#movie-imdbpage').find('a').attr('href');
+                    //console.log('Gravving IMDB page: '+movie_imdbpage)
                     if(selected_movie.length == 0){
                         console.log('Trying to submit an empty string')
                     }else{

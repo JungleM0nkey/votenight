@@ -140,7 +140,7 @@ def getinfo():
         movie_genres = existing_movie.genres
         movie_director = existing_movie.director
         movie_imdbpage = existing_movie.imdb_page
-    #if not then grab it from imdb 
+    #if not then grab it from imdb
     elif not existing_movie or refresh == 'true':
         print('Downloading the info from IMDB')
         ia = IMDb()
@@ -161,7 +161,7 @@ def getinfo():
             movie_rating = movie_object['rating']
         except:
             movie_rating = '??'
-        try: 
+        try:
             poster_url = movie_object['full-size cover url']
         except:
             poster_url = "/static/images/no-movie-poster.png"
@@ -170,7 +170,7 @@ def getinfo():
             movie_genres = ','.join(movie_genres).replace(',',', ') #this fixes spacing between genres in the string
         except:
             movie_genres = '????'
-        try: 
+        try:
             movie_director = movie_object['director'][0]['name']
         except:
             movie_director = '????'
@@ -208,6 +208,7 @@ def addmovie():
     movie_genres = request.form['movie_genres']
     current_user = request.form['current_user']
     movie_director = request.form['movie_director']
+    movie_imdbpage = request.form['movie_imdbpage']
     existing_movie = Movies.query.filter_by(movie=selected_movie).first()
     #user = User.query.filter_by(username=current_user).first()
     #points = user.points
@@ -220,7 +221,7 @@ def addmovie():
     else:
     #grab all the data from IMDB for it and put it into the db
         new_movie = Movies(movie=selected_movie,
-                           username=current_user, 
+                           username=current_user,
                            votes=0,
                            year=movie_year,
                            rating=movie_rating,
@@ -228,7 +229,8 @@ def addmovie():
                            poster=movie_poster,
                            genres=movie_genres,
                            director=movie_director,
-                           category='backlog'
+                           category='backlog',
+                           imdb_page=movie_imdbpage
                            )
         db.session.add(new_movie)
         #user.remove_point() #remove 1 point
@@ -294,9 +296,9 @@ def cuemovie():
 
 @app.route('/deletemovie', methods=['POST'])
 @login_required
-def deletemovie():    
+def deletemovie():
     movie_name = request.form['movie_name']
-    username = request.form['username']    
+    username = request.form['username']
     movie = Movies.query.filter_by(movie=movie_name).first()
     #make sure the user is not deleting someone elses movie
     if movie.username == username:
@@ -321,9 +323,9 @@ def fetch_movies():
     movies_list = []
     movies = Movies.query.all()
     for movie in movies:
-        movie_id = movie.id 
+        movie_id = movie.id
         movie_name = movie.movie
-        movie_votes = movie.votes 
+        movie_votes = movie.votes
         movie_user = movie.username
         movie_date = movie.date
         movie_object = {'id':movie_id,
@@ -416,7 +418,7 @@ def applymoviechanges():
     db.session.commit()
     return jsonify({'response':'done'})
 
-#Password reset 
+#Password reset
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
