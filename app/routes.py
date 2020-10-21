@@ -360,6 +360,134 @@ def get_movie(movie_id):
         abort(404)
     return jsonify({'movie':movie[0]})
 
+@app.route('/api/1.0/movies/que', methods=['POST'])
+@auth.login_required
+def que_movie():
+    if not request.json or not 'movie' in request.json:
+        return u'No movie name defined', 400
+    movie_name = request.json['movie']
+    username = auth.username()
+    movie = Movies.query.filter_by(movie=movie_name).first()
+    user = User.query.filter_by(username=username).first()
+    movie.category = 'cue'
+    if user.points > 0:
+        user.remove_point()
+        db.session.commit()
+        return jsonify({'Movie Name':movie.movie,'Category':movie.category, 'Username':movie.username, 'Updated User Points':user.points})
+    else:
+        return u'Not enough points', 400
+
+@app.route('/api/1.0/movies/vote', methods=['POST'])
+@auth.login_required
+def vote_movie():
+    if not request.json or not 'movie' in request.json or not 'action' in request.json:
+        return u'No movie title or action defined', 400
+    action = request.json['action']
+    movie_name = request.json['movie']
+    movie = Movies.query.filter_by(movie=movie_name).first()
+    if not movie:
+        return u'Could not find movie: '+movie_name
+    username = auth.username()
+    user = User.query.filter_by(username=username).first()
+    if user.points > 0 and action == "up":
+        user.remove_point()
+        user.last_vote = movie.movie 
+        movie.votes = movie.votes + 1
+        new_vote = Votes(username=user.username, movie=movie.movie, category='current')
+        db.session.add(new_vote)
+        db.session.commit()
+    elif action == 'down' and movie.votes != 0:
+        user.points = user.points + 1
+        user.last_vote = None
+        movie.votes = movie.votes - 1
+        existing_vote = db.session.query(Votes).filter_by(movie=movie.movie)
+        existing_vote = existing_vote.filter_by(username=user.username).first()
+        db.session.delete(existing_vote)
+        db.session.commit()
+    else:
+        return u'Not enough points', 400
+    return jsonify({'Movie ID':movie.id,'Movie Name':movie.movie,'Updated Movie Votes':movie.votes,'Updated User Points':user.points})
+
+@app.route('/api/1.0/movies/delete', methods=['POST'])
+@auth.login_required
+def delete_movie():
+    if not request.json or not 'movie' in request.json:
+        return u'No movie name defined', 400
+    movie_name = request.json['movie']
+    username = auth.username()
+    movie = Movies.query.filter_by(movie=movie_name).first()
+    #make sure the user is not deleting someone elses movie
+    if movie.username == username:
+        db.session.delete(movie)
+        db.session.commit()
+        return jsonify({'Movie Name':movie.movie,'removed':True})
+    else:
+        return u'Movie does not belong to user', 400
+
+@app.route('/api/1.0/movies/add', methods=['POST'])
+@auth.login_required
+def add_movie():
+    if not request.json or not 'movie' in request.json:
+        return u'No movie name defined', 400
+    movie_name = request.json['movie']
+    username = auth.username()
+    existing_movie = Movies.query.filter_by(movie=movie_name).first()
+    if not existing_movie: 
+        #search IMDB
+        ia = IMDb()
+        movie = ia.search_movie(str(movie_name))
+        if movie:
+            movie_id = movie[0].movieID
+            movie_object = ia.get_movie(movie_id)
+            movie_imdbpage = f'https://www.imdb.com/title/tt{movie_id}/'
+        else:
+            return u'Could not find movie info on IMDB', 400
+        try:
+            movie_year = movie_object['year']
+        except:
+            movie_year = '????'
+        try:
+            movie_plot = movie_object['plot'][0].split('::')[0]
+        except:
+            movie_plot = '????'
+        try:
+            movie_rating = movie_object['rating']
+        except:
+            movie_rating = '??'
+        try:
+            poster_url = movie_object['full-size cover url']
+        except:
+            poster_url = "/static/images/no-movie-poster.png"
+        try:
+            movie_genres = movie_object['genres']
+            movie_genres = ','.join(movie_genres).replace(',',', ') #this fixes spacing between genres in the string
+        except:
+            movie_genres = '????'
+        try:
+            movie_director = movie_object['director'][0]['name']
+        except:
+            movie_director = '????'
+        #add movie to db
+        new_movie = Movies(movie=movie_name,
+                           username=username,
+                           votes=0,
+                           year=movie_year,
+                           rating=movie_rating,
+                           plot=movie_plot,
+                           poster=poster_url,
+                           genres=movie_genres,
+                           director=movie_director,
+                           category='backlog',
+                           imdb_page=movie_imdbpage
+                           )
+        db.session.add(new_movie)
+        db.session.commit()
+        return jsonify({'poster':poster_url,'year':movie_year,'plot':movie_plot,'rating':movie_rating,'name':movie_name,'genres':movie_genres, 'director':movie_director, 'imdbpage':movie_imdbpage})
+    else:
+        return u'Movie already exists', 400
+     
+
+
 #Admin Control Panel
 
 @app.route('/admin', methods=['GET'])
