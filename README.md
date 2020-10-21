@@ -1,4 +1,5 @@
 ### Flask web application for voting on Movies & TV Shows
+![alt text](https://i.imgur.com/p17S3jI.png "votenight.ca preview")
 
 Setup:
 1. pip install -r requirements.txt
@@ -19,4 +20,3 @@ API Usage (Requires authentication):
 6. To move a movie from the backlog to the que send a POST request to <http://127.0.0.1:5000/api/1.0/movies/que> with the following JSON data:
 ```"Movie":"your-movie-name"```
 
-![alt text](https://i.imgur.com/p17S3jI.png "votenight.ca preview")
