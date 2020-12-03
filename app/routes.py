@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from flask import render_template, flash, redirect, url_for, request, jsonify, abort, g
 from flask_httpauth import HTTPBasicAuth
 from flask_login import current_user, login_user, logout_user, login_required

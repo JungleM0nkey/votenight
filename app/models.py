@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from app import app
 from app import db, login
 from datetime import datetime
