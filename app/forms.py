@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3 
 
 from flask_wtf import FlaskForm,  RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
