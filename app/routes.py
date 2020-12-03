@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app
 from app import db
 from app.forms import LoginForm, RegisterForm, ProfilePasswordForm, ProfileEmailForm, ResetPasswordRequestForm, ResetPasswordForm
-from app.email import send_password_reset_email
+#from app.email import send_password_reset_email
 from app.models import User, Movies, Code, Votes
 from werkzeug.urls import url_parse
 import datetime
@@ -547,18 +547,18 @@ def applymoviechanges():
     return jsonify({'response':'done'})
 
 #Password reset
-@app.route('/reset_password_request', methods=['GET', 'POST'])
-def reset_password_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = ResetPasswordRequestForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            send_password_reset_email(user)
-        flash('Password reset link sent to email')
-        return redirect(url_for('login'))
-    return render_template('pwreset.html', form=form)
+#@app.route('/reset_password_request', methods=['GET', 'POST'])
+#def reset_password_request():
+#    if current_user.is_authenticated:
+#        return redirect(url_for('index'))
+#    form = ResetPasswordRequestForm()
+#    if form.validate_on_submit():
+#        user = User.query.filter_by(email=form.email.data).first()
+#        if user:
+#            send_password_reset_email(user)
+#        flash('Password reset link sent to email')
+#        return redirect(url_for('login'))
+#    return render_template('pwreset.html', form=form)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
