@@ -1,46 +1,58 @@
-<html>
-    <head>
-        <title>Movienite Votehub</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/pwreset.css') }}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"> 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
-        <!--<script src="{{url_for('static', filename='node_modules/sortable/src/jquery-ui-1.10.1.custom.js')}}"></script>-->
-        <script>
-            $(document).ready(function(){
-                $('#return-button').on('click', function(){
-                    window.location.href = '/login'
-                });
+{% extends "base.html" %}
 
-            });
+{% block title %}Change Password - Movienite Votehub{% endblock %}
 
-        </script>
-    </head>
-    <body>
-        <div id="wrapper">
-            <div id="main-changepw">
-                <form action="" method="post">
-                    {{ form.hidden_tag() }}
-                    <p>
-                        {{ form.password.label }}<br>
-                        {{ form.password }}<br>
-                    </p>
-                    <p>
-                        {{ form.password_confirm.label }}<br>
-                        {{ form.password_confirm }}<br>
-                    </p>
-                    <p>{{ form.submit(id="submit-button") }}</p>
-                    <center>
-                        <span style="color: rgb(16, 243, 72);font-size:13px;">{{ message }}</span>
-                        {% for error in form.password.errors %}
-                        <span style="color: rgba(0, 0, 0, 0.856);">{{ error }}</span>
-                        {% endfor %}
-                        {% for error in form.password_confirm.errors %}
-                        <span style="color: rgba(0, 0, 0, 0.856);">{{ error }}</span>
-                        {% endfor %}
-                    </center>
-                </form>
-            </div>
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="card max-w-md w-full">
+        <div class="card-header text-center">
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Change Password</h1>
+            <p class="text-muted">Enter your new password</p>
         </div>
-    </body>
-</html>
+        
+        <div class="card-content">
+            <form action="" method="post" class="space-y-6">
+                {{ form.hidden_tag() }}
+                
+                <div class="space-y-2">
+                    <label for="{{ form.password.id }}" class="label">
+                        {{ form.password.label.text }}
+                    </label>
+                    {{ form.password(class="input", placeholder="Enter new password") }}
+                    {% for error in form.password.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="{{ form.password_confirm.id }}" class="label">
+                        {{ form.password_confirm.label.text }}
+                    </label>
+                    {{ form.password_confirm(class="input", placeholder="Confirm new password") }}
+                    {% for error in form.password_confirm.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                {{ form.submit(class="btn btn-primary w-full") }}
+                
+                {% if message %}
+                    <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <p class="text-sm text-green-600">{{ message }}</p>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+        
+        <div class="card-footer text-center">
+            <p class="text-sm text-muted">
+                <a href="{{ url_for('login') }}" class="text-blue-600 hover:text-blue-500 font-medium">
+                    Return to Login
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

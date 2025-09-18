@@ -1,44 +1,78 @@
-<html>
-    <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-    </head>
-    <body>
-        <div id="wrapper">
-            <div id="main">
-                <form action="" method="post" novalidate>
-                    {{ form.hidden_tag() }}
-                    <p>
-                        {{ form.username.label }}<br>
-                        {{ form.username(size=32) }}
-                        <!-- Error Codes for username field go here -->
-                        {% for error in form.username.errors %}
-                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    <p>
-                        {{ form.password.label }}<br>
-                        {{ form.password(size=32) }}
-                        <!-- Error Codes for username field go here -->
-                        {% for error in form.password.errors %}
-                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    <p><a href="#">Forgot my password</a></p>
-                  <!--  <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p> -->
-                    <p>{{ form.submit() }}</p>
-                    <p style="color:rgb(207, 207, 207)">{{ error }}</p>
-                    <!--Password reset messages get flashed here-->
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            {% for message in messages %}
+{% extends "base.html" %}
 
-                                {{ message }}
+{% block title %}Login - Movienite Votehub{% endblock %}
 
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
-                </form>
-            </div>
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="card max-w-md w-full">
+        <div class="card-header text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">🎬 Movienite Votehub</h1>
+            <p class="text-muted">Sign in to your account</p>
         </div>
-    </body>
-</html>
+        
+        <div class="card-content">
+            <form action="" method="post" novalidate class="space-y-6">
+                {{ form.hidden_tag() }}
+                
+                <div class="space-y-2">
+                    <label for="{{ form.username.id }}" class="label">
+                        {{ form.username.label.text }}
+                    </label>
+                    {{ form.username(class="input", placeholder="Enter your username") }}
+                    {% for error in form.username.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="{{ form.password.id }}" class="label">
+                        {{ form.password.label.text }}
+                    </label>
+                    {{ form.password(class="input", placeholder="Enter your password") }}
+                    {% for error in form.password.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <!-- Remember me checkbox placeholder -->
+                    </div>
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-500">
+                        Forgot your password?
+                    </a>
+                </div>
+                
+                {{ form.submit(class="btn btn-primary w-full") }}
+                
+                {% if error %}
+                    <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    </div>
+                {% endif %}
+                
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p class="text-sm text-blue-600">{{ message }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </form>
+        </div>
+        
+        <div class="card-footer text-center">
+            <p class="text-sm text-muted">
+                Don't have an account? 
+                <a href="{{ url_for('register') }}" class="text-blue-600 hover:text-blue-500 font-medium">
+                    Sign up
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

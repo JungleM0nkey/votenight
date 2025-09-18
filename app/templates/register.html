@@ -1,72 +1,94 @@
-<html>
-    <head>
-        <title>Register</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
-        <!--<script src="{{url_for('static', filename='node_modules/sortable/src/jquery-ui-1.10.1.custom.js')}}"></script>-->
-        <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
-        <script>
-            $(document).ready(function(){ 
-                $('#return-button').on('click', function(){
-                    window.location.href = '/login'
-                });
-            });
+{% extends "base.html" %}
 
-        </script>
-    </head>
-    <body>
-        <div id="wrapper">
-            <div id="main">
-                <i id="return-button" class="fa fa-chevron-circle-left"></i>
-                <form id="register-form" action="" method="post" novalidate>
-                    {{ form.hidden_tag() }}
-                    <p>
-                        {{ form.username.label }}<br>
-                        {{ form.username(size=32) }}
-                        <!-- Error Codes for username field go here -->
-                        {% for error in form.username.errors %}
-                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    <p>
-                        {{ form.password.label }}<br>
-                        {{ form.password(size=32) }}
-                        <!-- Error Codes for password field go here -->
-                        {% for error in form.password.errors %}
-                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    <p>
-                        {{ form.password_confirm.label }}<br>
-                        {{ form.password_confirm(size=32) }}
-                        <!-- Error Codes for password confirm field go here -->
-                        {% for error in form.password_confirm.errors %}
-                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    <p>
-                        {{ form.email.label }}<br>
-                        {{ form.email(size=32) }}
-                        <!-- Error Codes for password confirm field go here -->
-                        {% for error in form.email.errors %}
-                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    <p>
-                        {{ form.invite_code.label }}<br>
-                        {{ form.invite_code(size=32) }}
-                        <!-- Error Codes for invite code field go here -->
-                        {% for error in form.invite_code.errors %}
-                            <span style="color:rgb(207, 207, 207);"> {{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    
-                    <p>{{ form.submit() }}</p><br>
-                    
-                    <center><p style="color:rgb(207, 207, 207);margin-top:25px;">{{ error }}</p></center>
-                </form>
-            </div>
+{% block title %}Register - Movienite Votehub{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="card max-w-md w-full">
+        <div class="card-header text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+            <p class="text-muted">Join the movie voting community</p>
         </div>
-    </body>
-</html>
+        
+        <div class="card-content">
+            <form action="" method="post" novalidate class="space-y-6">
+                {{ form.hidden_tag() }}
+                
+                <div class="space-y-2">
+                    <label for="{{ form.username.id }}" class="label">
+                        {{ form.username.label.text }}
+                    </label>
+                    {{ form.username(class="input", placeholder="Choose a username") }}
+                    {% for error in form.username.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="{{ form.email.id }}" class="label">
+                        {{ form.email.label.text }}
+                    </label>
+                    {{ form.email(class="input", placeholder="Enter your email") }}
+                    {% for error in form.email.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="{{ form.password.id }}" class="label">
+                        {{ form.password.label.text }}
+                    </label>
+                    {{ form.password(class="input", placeholder="Create a password") }}
+                    {% for error in form.password.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="{{ form.password_confirm.id }}" class="label">
+                        {{ form.password_confirm.label.text }}
+                    </label>
+                    {{ form.password_confirm(class="input", placeholder="Confirm your password") }}
+                    {% for error in form.password_confirm.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="{{ form.invite_code.id }}" class="label">
+                        {{ form.invite_code.label.text }}
+                    </label>
+                    {{ form.invite_code(class="input", placeholder="Enter invite code") }}
+                    {% for error in form.invite_code.errors %}
+                        <p class="text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                
+                {{ form.submit(class="btn btn-primary w-full") }}
+                
+                {% if error %}
+                    <div class="p-3 border rounded-lg {% if error == 'User Created' %}bg-green-50 border-green-200{% else %}bg-red-50 border-red-200{% endif %}">
+                        <p class="text-sm {% if error == 'User Created' %}text-green-600{% else %}text-red-600{% endif %}">{{ error }}</p>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+        
+        <div class="card-footer text-center">
+            <p class="text-sm text-muted">
+                Already have an account? 
+                <a href="{{ url_for('login') }}" class="text-blue-600 hover:text-blue-500 font-medium">
+                    Sign in
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<a href="{{ url_for('login') }}" class="fixed top-4 left-4 btn btn-ghost">
+    <i class="fa fa-chevron-left mr-2"></i>
+    Back to Login
+</a>
+{% endblock %}
