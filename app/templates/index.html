@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Movienite Votehub</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
@@ -11,6 +12,15 @@
         <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
         <script type="text/javascript" src="{{url_for('static', filename='js/profile.js')}}"></script>
         <script>
+            // Setup CSRF token for AJAX requests
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", $('meta[name=csrf-token]').attr('content'));
+                    }
+                }
+            });
+            
             $(document).ready(function(){ 
                 $('#user-profile').hide();
                 $("#home-button-menu-results").hide();
@@ -266,22 +276,22 @@
                             }else{
                                 $('#your-points-field').find('span').text(`${points} points 🎬`)
                             }*/
-                            movie_row =
-                            `<tr class="selected-movie" id="${selected_movie}">
-                                    <td><i class="delete_button fa fa-trash"></i></td>
-                                    <td>${selected_movie}</td>
-                                    <td id="user-profile-button">${current_user}</td>
-                                    <td><i id="cue-button-plus" class="fa fa-arrow-circle-right"></i></td>
-                                    <td></td>
-                             </tr>`
+                            // Safely create movie row with proper escaping
+                            var movie_row = $('<tr>').addClass('selected-movie').attr('id', selected_movie);
+                            movie_row.append($('<td>').append($('<i>').addClass('delete_button fa fa-trash')));
+                            movie_row.append($('<td>').text(selected_movie));
+                            movie_row.append($('<td>').attr('id', 'user-profile-button').text(current_user));
+                            movie_row.append($('<td>').append($('<i>').attr('id', 'cue-button-plus').addClass('fa fa-arrow-circle-right')));
+                            movie_row.append($('<td>'));
+                            
                             $('.selected-movie').removeClass('selected-movie');
-                            $(movie_row).hide().appendTo('#movie-lw-table').fadeIn();
+                            movie_row.hide().appendTo('#movie-lw-table').fadeIn();
                             //$('#movie-que-table').fadeIn('fast')
                             console.log("Added movie to backlog sucessfuly")
                         }).fail(function(response) {
                             console.log("Failed adding the movie: "+response['responseText']);
                             if (response['responseText'] == 'Movie already exists'){
-                                selectmovie($(`#${selected_movie}`))
+                                selectmovie($('#' + CSS.escape(selected_movie)))
                             }
                         });
                     }

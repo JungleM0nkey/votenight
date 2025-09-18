@@ -120,10 +120,8 @@ def searchmovie():
     movies = ia.search_movie(str(search_string))
     movies = [ x['title'] for x in movies ]
     movies = list(set(movies))
-    html_list = ''
-    for movie in movies:
-        html_list += f'\n<div class="search-result"><span>{movie}</span></div>'
-    return jsonify({'movies':html_list})
+    # Return movie titles as an array, not as HTML
+    return jsonify({'movies':movies})
 
 @app.route('/getinfo', methods=['GET','POST'])
 @login_required
