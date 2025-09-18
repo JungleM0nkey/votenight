@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movienite Votehub - Modern UI Preview</title>
+    
+    <!-- Modern CSS Framework -->
+    <link rel="stylesheet" href="app/static/css/modern.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Additional demo styles */
+        .demo-note {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Demo Notice -->
+    <div class="container mx-auto py-6">
+        <div class="demo-note">
+            <h2 class="text-xl font-bold mb-2">🎬 Modernized Movienite Votehub Interface</h2>
+            <p>This preview shows the new shadcn/ui-inspired design system applied to the movie voting application</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex items-center justify-between">
+            <a href="#" class="navbar-brand">
+                🎬 Movienite Votehub
+            </a>
+            
+            <div class="navbar-nav">
+                <div class="points-badge">
+                    15 points 🎬
+                </div>
+                
+                <a href="#" class="btn btn-secondary btn-sm">
+                    <i class="fa fa-cog mr-2"></i>Admin Panel
+                </a>
+                
+                <div class="relative group">
+                    <button class="nav-link flex items-center gap-2">
+                        <i class="fa fa-user"></i>
+                        JohnDoe
+                        <i class="fa fa-chevron-down text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto py-8">
+        <!-- Welcome Header -->
+        <div class="card">
+            <div class="card-content">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Welcome, JohnDoe! 🎬</h1>
+                        <p class="text-muted">Points reset on Sunday, Sep 22</p>
+                    </div>
+                    <div class="points-badge text-lg">
+                        15 points 🎬
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+            <!-- Left Column: Movie Search and Info -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Movie Search -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">Add Movie</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="search-container">
+                            <div class="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    class="input flex-1" 
+                                    placeholder="Search for a movie..."
+                                    value="The Matrix"
+                                />
+                                <button class="btn btn-primary">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Movie Poster -->
+                <div class="card">
+                    <div class="card-content p-0">
+                        <div class="movie-poster" style="background-image: url('https://via.placeholder.com/300x400/333/fff?text=Movie+Poster');">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Movie Info -->
+                <div class="card">
+                    <div class="card-header flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Movie Details</h3>
+                        <button class="btn btn-ghost btn-sm">
+                            <i class="fa fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="space-y-2 text-sm">
+                            <div><span class="movie-property">Year:</span> 1999</div>
+                            <div><span class="movie-property">Rating:</span> 8.7/10</div>
+                            <div><span class="movie-property">Genres:</span> Action, Sci-Fi</div>
+                            <div><span class="movie-property">Directors:</span> The Wachowskis</div>
+                            <div><span class="movie-property">Plot:</span> A computer programmer discovers reality is a simulation...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Movie Tables -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- This Week's Movies -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">Movies This Week</h2>
+                    </div>
+                    <div class="card-content p-0">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="w-12"></th>
+                                        <th>Movie</th>
+                                        <th>Added By</th>
+                                        <th>Votes</th>
+                                        <th class="w-12"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="cursor-pointer hover:bg-gray-50 selected-movie">
+                                        <td></td>
+                                        <td class="font-medium">The Matrix</td>
+                                        <td>
+                                            <button class="text-blue-600 hover:text-blue-800 font-medium">
+                                                JohnDoe
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <div class="vote-buttons">
+                                                <span class="font-semibold">8</span>
+                                                <button class="vote-button upvote">
+                                                    <i class="fa fa-plus-square"></i>
+                                                </button>
+                                                <button class="vote-button downvote ml-2">
+                                                    <i class="fa fa-minus-square"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="cursor-pointer hover:bg-gray-50">
+                                        <td></td>
+                                        <td class="font-medium">Inception</td>
+                                        <td>
+                                            <button class="text-blue-600 hover:text-blue-800 font-medium">
+                                                AliceM
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <div class="vote-buttons">
+                                                <span class="font-semibold">5</span>
+                                                <button class="vote-button upvote">
+                                                    <i class="fa fa-plus-square"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="cursor-pointer hover:bg-gray-50">
+                                        <td></td>
+                                        <td class="font-medium">Pulp Fiction</td>
+                                        <td>
+                                            <button class="text-blue-600 hover:text-blue-800 font-medium">
+                                                BobR
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <div class="vote-buttons">
+                                                <span class="font-semibold">3</span>
+                                                <button class="vote-button upvote">
+                                                    <i class="fa fa-plus-square"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Movie Backlog -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-semibold">Movie Backlog</h2>
+                    </div>
+                    <div class="card-content p-0">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="w-12"></th>
+                                        <th>Movie</th>
+                                        <th>Added By</th>
+                                        <th class="w-12"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="cursor-pointer hover:bg-gray-50">
+                                        <td></td>
+                                        <td class="font-medium">Dune</td>
+                                        <td>SciFiFan</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary">
+                                                <i class="fa fa-arrow-up"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="cursor-pointer hover:bg-gray-50">
+                                        <td></td>
+                                        <td class="font-medium">Blade Runner 2049</td>
+                                        <td>CinemaLover</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary">
+                                                <i class="fa fa-arrow-up"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Archive Toggle Button -->
+    <button class="archive-toggle btn btn-secondary">
+        <i class="fas fa-archive"></i>
+    </button>
+</body>
+</html>

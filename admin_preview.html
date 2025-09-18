@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Movienite Votehub</title>
+    
+    <!-- Modern CSS Framework -->
+    <link rel="stylesheet" href="app/static/css/modern.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        [contenteditable="true"] {
+            border: 1px solid transparent;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        [contenteditable="true"]:hover {
+            border-color: hsl(214.3, 31.8%, 91.4%);
+        }
+
+        [contenteditable="true"]:focus {
+            outline: none;
+            border-color: hsl(222.2, 84%, 4.9%);
+            box-shadow: 0 0 0 2px hsla(222.2, 84%, 4.9%, 0.2);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex items-center justify-between">
+            <a href="#" class="navbar-brand">
+                🎬 Movienite Votehub
+            </a>
+            
+            <div class="navbar-nav">
+                <div class="points-badge">
+                    Admin Mode
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto py-6 space-y-6">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-content">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold text-gray-900">Admin Control Panel</h1>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left mr-2"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Users Table -->
+            <div class="card">
+                <div class="card-header flex items-center justify-between">
+                    <h2 class="text-xl font-semibold">Users</h2>
+                    <div class="flex gap-2">
+                        <button class="btn btn-ghost btn-sm" title="Reset all votes">
+                            <i class="fa fa-sync-alt mr-1"></i> Reset Votes
+                        </button>
+                        <button class="btn btn-ghost btn-sm" title="Reset all points">
+                            <i class="fa fa-sync-alt mr-1"></i> Reset Points
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content p-0">
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Last Vote</th>
+                                    <th>Points</th>
+                                    <th>Email</th>
+                                    <th>User Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="font-medium">JohnDoe</td>
+                                    <td>The Matrix</td>
+                                    <td contenteditable="true">15</td>
+                                    <td contenteditable="true">john@example.com</td>
+                                    <td>
+                                        <div class="flex items-center justify-between cursor-pointer">
+                                            <span>admin</span>
+                                            <i class="fas fa-caret-down ml-2"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="font-medium">AliceM</td>
+                                    <td>Inception</td>
+                                    <td contenteditable="true">8</td>
+                                    <td contenteditable="true">alice@example.com</td>
+                                    <td>
+                                        <div class="flex items-center justify-between cursor-pointer">
+                                            <span>user</span>
+                                            <i class="fas fa-caret-down ml-2"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="font-medium">BobR</td>
+                                    <td>None</td>
+                                    <td contenteditable="true">12</td>
+                                    <td contenteditable="true">bob@example.com</td>
+                                    <td>
+                                        <div class="flex items-center justify-between cursor-pointer">
+                                            <span>user</span>
+                                            <i class="fas fa-caret-down ml-2"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary w-full">
+                        Apply User Changes
+                    </button>
+                </div>
+            </div>
+
+            <!-- Movies Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-xl font-semibold">Movies</h2>
+                </div>
+                <div class="card-content p-0">
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Movie</th>
+                                    <th>Votes</th>
+                                    <th>Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="font-medium">The Matrix</td>
+                                    <td contenteditable="true">8</td>
+                                    <td>
+                                        <div class="flex items-center justify-between cursor-pointer">
+                                            <span>this week</span>
+                                            <i class="fas fa-caret-down ml-2"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="font-medium">Inception</td>
+                                    <td contenteditable="true">5</td>
+                                    <td>
+                                        <div class="flex items-center justify-between cursor-pointer">
+                                            <span>this week</span>
+                                            <i class="fas fa-caret-down ml-2"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="font-medium">Dune</td>
+                                    <td contenteditable="true">0</td>
+                                    <td>
+                                        <div class="flex items-center justify-between cursor-pointer">
+                                            <span>long wait</span>
+                                            <i class="fas fa-caret-down ml-2"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="font-medium">Casablanca</td>
+                                    <td contenteditable="true">12</td>
+                                    <td>
+                                        <div class="flex items-center justify-between cursor-pointer">
+                                            <span>archive</span>
+                                            <i class="fas fa-caret-down ml-2"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary w-full">
+                        Apply Movie Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

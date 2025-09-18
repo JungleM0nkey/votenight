@@ -1,43 +1,67 @@
-<div id="profile-wrapper">
-    <!--<i id="return-button" class="fa fa-chevron-circle-left"></i>-->
-    <h1 id="username-header">User: {{ user.username }}</h1>
-    <div id="mid">
-        <div id="user-movies-table-area">
-            <div class="left">
-                <table id="user-movies-table">
-                    <tr id="table-header">
-                        <th></th>
-                        <th>Submitted Movies</th>
-                        <th>Date Submitted</th>
-                        <th></th>
-                    </tr>
-                    {%for object in user_movies %}
-                    <tr id="{{ object.movie }}">
-                        <td></td>
-                        <td>{{ object.movie }}</td>
-                        <td>{{ object.date.date() }}</td>
-                        <td></td>
-                    </tr>
-                    {% endfor %}
-                </table>
+<div class="card max-w-4xl mx-auto">
+    <div class="card-header">
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-900">User Profile: {{ user.username }}</h1>
+            <button onclick="$(this).closest('#user-profile').fadeOut(); $('.blur-element').removeClass('blur-element');" class="btn btn-ghost btn-sm">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-content">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Submitted Movies -->
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Submitted Movies</h2>
+                <div class="overflow-x-auto">
+                    <table class="table" id="user-movies-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Movie</th>
+                                <th>Date Submitted</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for object in user_movies %}
+                            <tr id="{{ object.movie }}" class="cursor-pointer hover:bg-gray-50">
+                                <td></td>
+                                <td class="font-medium">{{ object.movie }}</td>
+                                <td class="text-sm text-gray-600">{{ object.date.date() }}</td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="right">
-                <table id="user-votes-table">
-                    <tr id="table-header">
-                        <th></th>
-                        <th>Voted Movies</th>
-                        <th>Date Voted</th>
-                        <th></th>
-                    </tr>
-                    {%for object in user_votes %}
-                    <tr id="{{ object.movie }}">
-                        <td></td>
-                        <td>{{ object.movie }}</td>
-                        <td>{{ object.date.date() }}</td>
-                        <td></td>
-                    </tr>
-                    {% endfor %}
-                </table>
+            
+            <!-- Voted Movies -->
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Voted Movies</h2>
+                <div class="overflow-x-auto">
+                    <table class="table" id="user-votes-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Movie</th>
+                                <th>Date Voted</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for object in user_votes %}
+                            <tr id="{{ object.movie }}" class="cursor-pointer hover:bg-gray-50">
+                                <td></td>
+                                <td class="font-medium">{{ object.movie }}</td>
+                                <td class="text-sm text-gray-600">{{ object.date.date() }}</td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
