@@ -116,20 +116,31 @@ def get_nextdate():
 @login_required
 def searchmovie():
     ia = IMDb()
-    search_string = request.form['query']
-    movies = ia.search_movie(str(search_string))
-    movies = [ x['title'] for x in movies ]
-    movies = list(set(movies))
-    html_list = ''
-    for movie in movies:
-        html_list += f'\n<div class="search-result"><span>{movie}</span></div>'
-    return jsonify({'movies':html_list})
+    search_string = request.form.get('query', '').strip()
+    if not search_string or len(search_string) > 200:
+        return jsonify({'movies': []})
+    
+    try:
+        movies = ia.search_movie(str(search_string))
+        movies = [ x['title'] for x in movies if 'title' in x ]
+        movies = list(set(movies))
+        # Return movie titles as an array, not as HTML
+        return jsonify({'movies':movies})
+    except Exception as e:
+        return jsonify({'movies': []})
 
 @app.route('/getinfo', methods=['GET','POST'])
 @login_required
 def getinfo():
-    search_string = request.form['query']
-    refresh = request.form['refresh']
+    search_string = request.form.get('query', '').strip()
+    refresh = request.form.get('refresh', 'false')
+    
+    if not search_string or len(search_string) > 200:
+        return jsonify({'error': 'Invalid query'}), 400
+    
+    if refresh not in ['true', 'false']:
+        refresh = 'false'
+    
     existing_movie = Movies.query.filter_by(movie=search_string).first()
     #grab the movie info from the db if it exists
     if existing_movie and refresh == 'false':
@@ -202,15 +213,27 @@ def img_estim(img, thrshld):
 @app.route('/addmovie', methods=['GET', 'POST'])
 @login_required
 def addmovie():
-    selected_movie = request.form['selected_movie']
-    movie_year = request.form['movie_year']
-    movie_rating = request.form['movie_rating']
-    movie_plot = request.form['movie_plot']
-    movie_poster = request.form['movie_poster']
-    movie_genres = request.form['movie_genres']
-    current_user = request.form['current_user']
-    movie_director = request.form['movie_director']
-    movie_imdbpage = request.form['movie_imdbpage']
+    # Input validation
+    selected_movie = request.form.get('selected_movie', '').strip()
+    movie_year = request.form.get('movie_year', '').strip()
+    movie_rating = request.form.get('movie_rating', '').strip()
+    movie_plot = request.form.get('movie_plot', '').strip()
+    movie_poster = request.form.get('movie_poster', '').strip()
+    movie_genres = request.form.get('movie_genres', '').strip()
+    current_user = request.form.get('current_user', '').strip()
+    movie_director = request.form.get('movie_director', '').strip()
+    movie_imdbpage = request.form.get('movie_imdbpage', '').strip()
+    
+    # Validate required fields
+    if not selected_movie or len(selected_movie) > 200:
+        return u'Invalid movie name', 400
+    if not current_user or current_user != current_user.username:
+        return u'Invalid user', 400
+    
+    # Validate movie plot length
+    if len(movie_plot) > 2000:
+        movie_plot = movie_plot[:2000]
+    
     existing_movie = Movies.query.filter_by(movie=selected_movie).first()
     #user = User.query.filter_by(username=current_user).first()
     #points = user.points

@@ -4,7 +4,12 @@ function searchQuery(){
     $.post( '/searchmovie', { "query": moviequery } ).done(function(response) {
         //console.log(response['movies'])
         movies = response['movies']
-        $('#search-results').html(movies);
+        // Safely build HTML from movie array
+        var html_list = '';
+        movies.forEach(function(movie) {
+            html_list += '<div class="search-result"><span>' + $('<div>').text(movie).html() + '</span></div>';
+        });
+        $('#search-results').html(html_list);
     }).fail(function() {
         //
     });
@@ -19,15 +24,14 @@ function getvotes(movie_name,movie_row){
             //adds extra rows under the row that shows votes, only does this if the row is selected
             votes_list.forEach(vote => {
                 if (movie_row.hasClass('selected-movie')){
-                    movie_row.after(`
-                    <tr class="vote-row" id="${movie_name}-vote-row-${vote}">
-                        <td class="vote-row"></td>
-                        <td class="vote-row"></td>
-                        <td class="vote-row">${vote}</td>
-                        <td class="vote-row"><span>+1</span></td>
-                        <td class="vote-row"></td>
-                    </tr>
-                    `);
+                    // Safely create vote row with proper escaping
+                    var voteRow = $('<tr>').addClass('vote-row').attr('id', movie_name + '-vote-row-' + vote);
+                    voteRow.append($('<td>').addClass('vote-row'));
+                    voteRow.append($('<td>').addClass('vote-row'));
+                    voteRow.append($('<td>').addClass('vote-row').text(vote));
+                    voteRow.append($('<td>').addClass('vote-row').append($('<span>').text('+1')));
+                    voteRow.append($('<td>').addClass('vote-row'));
+                    movie_row.after(voteRow);
                 }
             });
         }
@@ -55,7 +59,9 @@ function getinfo(selected_movie,movie_row,refresh){
         $('#movie-director').text(`${response['director']}`)
         $('#movie-plot').text(`${response['plot']}`)
         //$('#movie-imdbpage').text(`${response['imdbpage']}`)
-        $('#movie-imdbpage').html(`<a href="${response['imdbpage']}">Link</a>`)
+        // Safely create IMDB link with proper escaping
+        var imdbLink = $('<a>').attr('href', response['imdbpage']).text('Link');
+        $('#movie-imdbpage').empty().append(imdbLink);
         if(movie_name){
             getvotes(selected_movie,movie_row);
         }

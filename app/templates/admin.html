@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Movienite Votehub</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"> 
@@ -10,29 +11,45 @@
         <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
         <script type="text/javascript" src="{{url_for('static', filename='js/profile.js')}}"></script>
         <script>
+            // Setup CSRF token for AJAX requests
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", $('meta[name=csrf-token]').attr('content'));
+                    }
+                }
+            });
+            
             $(document).ready(function(){
                 $('body').attr('spellcheck', false);
                 //open the user type selection dropdown
                 $('#users-table td:last-child').on('click', function(event){
                     $('#type-dropdown').remove();
-                    $(this).append(`
-                        <div id="type-dropdown">
-                                <div class="selection"><i class="fas fa-caret-down"></i><span>user</span></div>
-                                <div class="selection"><span>admin</span></div>
-                        </div>
-                    `);
+                    // Safely create dropdown elements
+                    var dropdown = $('<div>').attr('id', 'type-dropdown');
+                    var userSelection = $('<div>').addClass('selection');
+                    userSelection.append($('<i>').addClass('fas fa-caret-down'));
+                    userSelection.append($('<span>').text('user'));
+                    var adminSelection = $('<div>').addClass('selection');
+                    adminSelection.append($('<span>').text('admin'));
+                    dropdown.append(userSelection).append(adminSelection);
+                    $(this).append(dropdown);
                 });
 
                 //open the movie category selection dropdown
                 $('#movies-table td:last-child').on('click', function(event){
                     $('#category-dropdown').remove();
-                    $(this).append(`
-                        <div id="category-dropdown">
-                                <div class="selection"><i class="fas fa-caret-down"></i><span>archive</span></div>
-                                <div class="selection"><span>backlog</span></div>
-                                <div class="selection"><span>cue</span></div>
-                        </div>
-                    `);
+                    // Safely create dropdown elements
+                    var dropdown = $('<div>').attr('id', 'category-dropdown');
+                    var archiveSelection = $('<div>').addClass('selection');
+                    archiveSelection.append($('<i>').addClass('fas fa-caret-down'));
+                    archiveSelection.append($('<span>').text('archive'));
+                    var backlogSelection = $('<div>').addClass('selection');
+                    backlogSelection.append($('<span>').text('backlog'));
+                    var cueSelection = $('<div>').addClass('selection');
+                    cueSelection.append($('<span>').text('cue'));
+                    dropdown.append(archiveSelection).append(backlogSelection).append(cueSelection);
+                    $(this).append(dropdown);
                 });
 
                 //change the user type from the dropdown
