@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Movienite Votehub{% endblock %}</title>
+    
+    <!-- Modern CSS Framework -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- jQuery and UI libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/profile.js')}}"></script>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="gradient-bg min-h-screen">
+    {% block navbar %}
+    <nav class="navbar">
+        <div class="container flex items-center justify-between">
+            <a href="{{ url_for('index', user=current_user.username) if current_user.is_authenticated else url_for('login') }}" class="navbar-brand">
+                🎬 Movienite Votehub
+            </a>
+            
+            {% if current_user.is_authenticated %}
+            <div class="navbar-nav">
+                <div class="points-badge">
+                    {% if points == 1 %}
+                        {{ points }} point 🎬
+                    {% else %}
+                        {{ points|default(0) }} points 🎬
+                    {% endif %}
+                </div>
+                
+                {% if current_user.user_type == 'admin' %}
+                <a href="/admin" class="btn btn-secondary btn-sm">
+                    <i class="fa fa-cog mr-2"></i>Admin Panel
+                </a>
+                {% endif %}
+                
+                <div class="relative group">
+                    <button class="nav-link flex items-center gap-2">
+                        <i class="fa fa-user"></i>
+                        {{ current_user.username }}
+                        <i class="fa fa-chevron-down text-sm"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</a>
+                        <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+    {% endblock %}
+
+    <main class="container mx-auto py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
