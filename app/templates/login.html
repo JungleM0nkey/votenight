@@ -38,6 +38,12 @@
                         {% endif %}
                     {% endwith %}
                 </form>
+                <div style="margin-top: 20px; text-align: center;">
+                    <p style="color:rgb(207, 207, 207); margin-bottom: 10px;">Or sign in with:</p>
+                    <a href="{{ url_for('discord_login') }}" style="display: inline-block; background-color: #5865F2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        Login with Discord
+                    </a>
+                </div>
             </div>
         </div>
     </body>

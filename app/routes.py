@@ -1,9 +1,9 @@
-#!/usr/bin/env python3 
+#!/usr/bin/env python3
 
-from flask import render_template, flash, redirect, url_for, request, jsonify, abort, g
+from flask import render_template, flash, redirect, url_for, request, jsonify, abort, g, session
 from flask_httpauth import HTTPBasicAuth
 from flask_login import current_user, login_user, logout_user, login_required
-from app import app
+from app import app, discord
 from app import db
 from app.forms import LoginForm, RegisterForm, ProfilePasswordForm, ProfileEmailForm, ResetPasswordRequestForm, ResetPasswordForm
 #from app.email import send_password_reset_email
@@ -66,6 +66,11 @@ def index(user):
 @app.route('/register', methods=['GET','POST'])
 def register():
     form = RegisterForm()
+    # Pre-fill Discord info if available
+    discord_id = session.get('discord_id')
+    discord_username = session.get('discord_username')
+    discord_email = session.get('discord_email')
+
     if form.validate_on_submit():
         username = form.username.data
         #username = username.lower()
@@ -82,10 +87,24 @@ def register():
             return render_template('register.html', form=form, error=error)
         new_user = User(username=username,points=1,email=email,user_type='user')
         new_user.set_password(password)
+        # Link Discord account if registering via Discord
+        if discord_id:
+            new_user.discord_id = discord_id
+            # Clear Discord session data
+            session.pop('discord_id', None)
+            session.pop('discord_username', None)
+            session.pop('discord_email', None)
         existing_code.username = username
         db.session.add(new_user)
         db.session.commit()
         return render_template('register.html', form=form, error='User Created')
+
+    # Pre-fill form with Discord data
+    if discord_username and not form.username.data:
+        form.username.data = discord_username[:16]  # Limit to 16 chars
+    if discord_email and not form.email.data:
+        form.email.data = discord_email
+
     return render_template('register.html', form=form)
 
 @app.route('/profile', methods=['GET','POST'])
@@ -101,6 +120,55 @@ def profile():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/auth/discord')
+def discord_login():
+    redirect_uri = url_for('discord_callback', _external=True)
+    return discord.authorize_redirect(redirect_uri)
+
+@app.route('/auth/discord/callback')
+def discord_callback():
+    try:
+        token = discord.authorize_access_token()
+        resp = discord.get('users/@me', token=token)
+        user_info = resp.json()
+
+        discord_id = user_info.get('id')
+        discord_username = user_info.get('username')
+        discord_email = user_info.get('email')
+
+        if not discord_id:
+            flash('Discord authentication failed')
+            return redirect(url_for('login'))
+
+        # Check if user exists with this Discord ID
+        user = User.query.filter_by(discord_id=discord_id).first()
+
+        if user:
+            # Existing user with Discord linked
+            login_user(user, remember=True)
+            return redirect(url_for('index', user=user.username))
+        else:
+            # Check if user exists with this email
+            if discord_email:
+                user = User.query.filter_by(email=discord_email).first()
+                if user:
+                    # Link Discord to existing account
+                    user.discord_id = discord_id
+                    db.session.commit()
+                    login_user(user, remember=True)
+                    return redirect(url_for('index', user=user.username))
+
+            # New user - store Discord info in session for registration
+            session['discord_id'] = discord_id
+            session['discord_username'] = discord_username
+            session['discord_email'] = discord_email
+            flash('Please complete registration or contact admin for invite code')
+            return redirect(url_for('register'))
+
+    except Exception as e:
+        flash('Discord authentication failed')
+        return redirect(url_for('login'))
 
 @app.route('/pwchange')
 def pwchange():

@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     points = db.Column(db.Integer)
     last_vote = db.Column(db.String(80))
     user_type = db.Column(db.String)
+    discord_id = db.Column(db.String(64), unique=True, nullable=True)
 
     def __repr__(self):
         return self.username

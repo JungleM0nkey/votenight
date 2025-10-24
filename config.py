@@ -21,3 +21,7 @@ class Config(object):
     #MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     #ADMINS = ['votenight.pw@gmail.com']
     FLASK_RUN_PORT=8000
+    #discord oauth
+    DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID')
+    DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET')
+    DISCORD_REDIRECT_URI = os.environ.get('DISCORD_REDIRECT_URI') or 'http://localhost:8000/auth/discord/callback'
